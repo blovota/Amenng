@@ -1,6 +1,6 @@
 {
-  "name": "AmenNG — Bible & Testimonies",
-  "short_name": "AmenNG",
+  "name": "AmeniTestify — Bible & Testimonies",
+  "short_name": "AmeniTestify",
   "description": "The Bible in a Nigerian voice. Daily testimonies from everyday Nigerians.",
   "start_url": "./index.html",
   "display": "standalone",
