@@ -1,0 +1,1489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover"/>
+<title>Amen iTestify</title>
+<meta name="description" content="Audio Bible in a Nigerian voice. Voice testimonies. Christian events across Nigeria."/>
+<meta name="theme-color" content="#0a0a0a"/>
+<link rel="manifest" href="manifest.json"/>
+<link rel="apple-touch-icon" href="icon-192.png"/>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-VCX89ERY5K"></script>
+<script>
+window.dataLayer=window.dataLayer||[];
+function gtag(){dataLayer.push(arguments);}
+gtag('js',new Date());
+gtag('config','G-VCX89ERY5K');
+function gaEvent(action,category,label){try{gtag('event',action,{event_category:category,event_label:label});}catch(e){}}
+</script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,700&display=swap" rel="stylesheet"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{font-size:16px}
+body{background:#f5f5f0;color:#0a0a0a;font-family:'DM Sans',sans-serif;min-height:100vh;overflow-x:hidden;padding-bottom:80px}
+:root{
+  --black:#0a0a0a;--white:#fff;--off:#f5f5f0;
+  --g50:#f9f9f7;--g100:#eeede8;--g200:#dddcd6;--g400:#9a9990;--g600:#555450;
+  --blue:#1a3a8f;--blue-light:rgba(26,58,143,.08);--blue-mid:rgba(26,58,143,.18);
+  --amber:#b85c00;--amber-light:rgba(184,92,0,.08);
+  --green:#166534;--green-light:rgba(22,101,52,.1);
+  --purple:#6d28d9;--purple-light:rgba(109,40,217,.08);
+  --red:#b91c1c;
+  --r:14px;--rs:9px;
+  --sh:0 2px 12px rgba(0,0,0,.07);--shm:0 6px 28px rgba(0,0,0,.13)
+}
+/* ── LOADING ── */
+.loading-screen{position:fixed;inset:0;background:var(--black);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999;transition:opacity .4s}
+.loading-screen.hidden{opacity:0;pointer-events:none}
+.loading-logo{font-family:'Playfair Display',serif;font-size:2rem;font-weight:900;color:#fff;margin-bottom:16px}
+.loading-logo span{color:var(--amber);font-style:italic}
+.loading-bar{width:160px;height:3px;background:rgba(255,255,255,.15);border-radius:2px;overflow:hidden}
+.loading-fill{height:100%;background:var(--amber);border-radius:2px;animation:lf 1.5s ease infinite}
+@keyframes lf{0%{width:0%}100%{width:100%}}
+/* ── OFFLINE BANNER ── */
+.offline-bar{display:none;position:fixed;top:56px;left:0;right:0;z-index:70;background:#b91c1c;color:#fff;font-size:.75rem;font-weight:700;text-align:center;padding:7px 16px;letter-spacing:.04em}
+.offline-bar.on{display:block}
+/* ── HEADER ── */
+header{position:sticky;top:0;z-index:80;background:var(--black);padding:0 16px;height:56px;display:flex;align-items:center;justify-content:space-between}
+.logo{display:flex;align-items:center;cursor:pointer;user-select:none;-webkit-user-select:none}
+.logo-text{font-family:'Playfair Display',serif;font-size:1.35rem;font-weight:900;color:#fff;letter-spacing:-.01em}
+.logo-i{color:var(--amber);font-style:italic}
+.logo-light{font-weight:400;font-style:italic;color:rgba(255,255,255,.7)}
+.hdate{font-size:.68rem;color:rgba(255,255,255,.4);font-weight:500;letter-spacing:.06em;text-transform:uppercase}
+/* ── PWA INSTALL BANNER ── */
+.pwa-banner{display:none;background:var(--blue);padding:11px 16px;align-items:center;gap:10px;position:sticky;top:56px;z-index:75}
+.pwa-banner.on{display:flex}
+.pwa-banner-text{flex:1;font-size:.8rem;color:#fff;font-weight:600;line-height:1.4}
+.pwa-banner-text span{display:block;font-size:.68rem;font-weight:400;opacity:.75;margin-top:1px}
+.pwa-install-btn{background:#fff;color:var(--blue);border:none;border-radius:var(--rs);padding:8px 14px;font-size:.78rem;font-weight:700;cursor:pointer;white-space:nowrap;font-family:'DM Sans',sans-serif;touch-action:manipulation}
+.pwa-dismiss{background:none;border:none;color:rgba(255,255,255,.5);font-size:1.2rem;cursor:pointer;padding:4px;touch-action:manipulation}
+/* ── BOTTOM NAV ── */
+.bnav{position:fixed;bottom:0;left:0;right:0;z-index:90;background:var(--black);display:flex;padding-bottom:env(safe-area-inset-bottom)}
+.bni{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:10px 4px 8px;border:none;background:none;color:rgba(255,255,255,.35);font-size:.55rem;cursor:pointer;font-family:'DM Sans',sans-serif;letter-spacing:.07em;text-transform:uppercase;font-weight:700;touch-action:manipulation;transition:color .2s;border-top:2px solid transparent}
+.bni .ic{font-size:1.25rem;line-height:1;display:block}
+.bni.on-bible{color:#fff;border-top-color:var(--blue)}
+.bni.on-testi{color:#fff;border-top-color:var(--amber)}
+.bni.on-events{color:#fff;border-top-color:var(--green)}
+/* ── STICKY MINI PLAYER ── */
+.mini-player{display:none;position:fixed;bottom:64px;left:0;right:0;z-index:85;background:var(--black);padding:10px 16px;align-items:center;gap:12px;border-top:1px solid rgba(255,255,255,.1);box-shadow:0 -4px 20px rgba(0,0,0,.3)}
+.mini-player.on{display:flex}
+.mini-info{flex:1;min-width:0}
+.mini-book{font-size:.6rem;color:rgba(255,255,255,.4);font-weight:700;letter-spacing:.1em;text-transform:uppercase}
+.mini-title{font-size:.85rem;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mini-bar-wrap{flex:1;height:3px;background:rgba(255,255,255,.12);border-radius:2px;margin:0 4px}
+.mini-bar-fill{height:100%;background:var(--amber);border-radius:2px;width:0%;transition:width .1s}
+.mini-btn{background:none;border:none;color:#fff;font-size:1.3rem;cursor:pointer;padding:6px;touch-action:manipulation;flex-shrink:0}
+/* ── FLOATING ADVERTISE BUTTON ── */
+.fab-ad{position:fixed;bottom:80px;right:16px;z-index:84;background:var(--amber);color:#fff;border:none;border-radius:50px;padding:11px 18px;font-size:.75rem;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;box-shadow:var(--shm);touch-action:manipulation;display:flex;align-items:center;gap:6px;letter-spacing:.03em;transition:transform .2s}
+.fab-ad:active{transform:scale(.95)}
+/* ── PANELS ── */
+.panel{display:none;max-width:680px;margin:0 auto;padding:0 16px 24px;animation:fu .22s ease}
+.panel.on{display:block}
+@keyframes fu{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+/* ── UTILITIES ── */
+.btn{display:block;width:100%;padding:14px 20px;border:none;border-radius:var(--rs);font-family:'DM Sans',sans-serif;font-size:.9rem;font-weight:700;cursor:pointer;transition:all .18s;touch-action:manipulation}
+.btn-black{background:var(--black);color:#fff}.btn-blue{background:var(--blue);color:#fff}
+.btn-amber{background:var(--amber);color:#fff}.btn-green{background:var(--green);color:#fff}
+.btn-outline{background:transparent;border:1.5px solid var(--g200);color:var(--g600)}
+.btn-danger{background:var(--red);color:#fff}
+.btn-purple{background:var(--purple);color:#fff}
+.btn-sm{padding:8px 16px;width:auto;font-size:.78rem;display:inline-block;border-radius:var(--rs)}
+.btn-xs{padding:6px 12px;width:auto;font-size:.72rem;display:inline-block;border-radius:6px}
+.fgroup{display:flex;flex-direction:column;gap:5px;margin-bottom:14px}
+.flabel{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--g600)}
+.finput,.fselect,.ftextarea{background:#fff;border:1.5px solid var(--g200);border-radius:var(--rs);padding:11px 13px;color:var(--black);font-size:.88rem;font-family:'DM Sans',sans-serif;outline:none;transition:border-color .2s;width:100%}
+.finput:focus,.fselect:focus,.ftextarea:focus{border-color:var(--black)}
+.ftextarea{resize:vertical;min-height:90px;line-height:1.6}
+.frow{display:flex;gap:10px}.frow>.fgroup{flex:1}
+.card{background:#fff;border-radius:var(--r);padding:16px;margin-bottom:14px;box-shadow:var(--sh)}
+.tag{display:inline-flex;align-items:center;padding:3px 10px;border-radius:20px;font-size:.65rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+.tag-blue{background:var(--blue-light);color:var(--blue)}
+.tag-amber{background:var(--amber-light);color:var(--amber)}
+.tag-green{background:var(--green-light);color:var(--green)}
+.tag-purple{background:var(--purple-light);color:var(--purple)}
+.tag-new{background:#fef3c7;color:#92400e;font-size:.58rem}
+.toast{position:fixed;bottom:145px;left:50%;transform:translateX(-50%) translateY(8px);background:var(--black);color:#fff;border-radius:var(--rs);padding:11px 20px;font-size:.82rem;font-weight:600;z-index:500;opacity:0;transition:all .25s;pointer-events:none;max-width:88vw;text-align:center;box-shadow:var(--shm)}
+.toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+/* ── HERO SECTIONS ── */
+.hero{background:var(--black);margin:0 -16px;padding:24px 16px 20px;margin-bottom:20px}
+.hero-eye{font-size:.65rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.hero-eye::before{content:'';width:24px;height:2px;display:inline-block}
+.hero-eye-blue{color:var(--blue)}.hero-eye-blue::before{background:var(--blue)}
+.hero-eye-amber{color:var(--amber)}.hero-eye-amber::before{background:var(--amber)}
+.hero-eye-green{color:#4ade80}.hero-eye-green::before{background:#4ade80}
+.hero h1{font-family:'Playfair Display',serif;font-size:2.1rem;font-weight:900;color:#fff;line-height:1.05;margin-bottom:10px}
+.hero h1 em{font-style:italic}
+.hero p{font-size:.83rem;color:rgba(255,255,255,.5);line-height:1.7}
+.hero-stats{display:flex;gap:16px;margin-top:14px;padding-top:14px;border-top:1px solid rgba(255,255,255,.08)}
+.hero-stat{text-align:center}
+.hero-stat-n{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:900;color:#fff;line-height:1}
+.hero-stat-l{font-size:.58rem;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:.08em;font-weight:700;margin-top:2px}
+/* ── CONTINUE BANNER ── */
+.continue-banner{background:var(--black);border-radius:var(--r);padding:14px 16px;margin-bottom:16px;display:flex;align-items:center;gap:12px;cursor:pointer;touch-action:manipulation;box-shadow:var(--shm)}
+.continue-banner:active{opacity:.88}
+.continue-info{flex:1;min-width:0}
+.continue-label{font-size:.6rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--amber);margin-bottom:3px}
+.continue-title{font-size:.92rem;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* ── VOICE TABS ── */
+.voice-tabs{display:flex;gap:6px;margin-bottom:18px;overflow-x:auto;padding-bottom:2px}
+.voice-tabs::-webkit-scrollbar{display:none}
+.vtab{padding:8px 16px;border-radius:20px;border:1.5px solid var(--g200);background:#fff;color:var(--g600);font-size:.75rem;font-weight:700;cursor:pointer;white-space:nowrap;touch-action:manipulation;transition:all .18s;font-family:'DM Sans',sans-serif}
+.vtab.on{background:var(--blue);border-color:var(--blue);color:#fff}
+/* ── TESTAMENT ── */
+.testament-row{display:flex;border-radius:var(--rs);overflow:hidden;margin-bottom:16px;border:1.5px solid var(--g200);background:#fff}
+.tt-btn{flex:1;padding:11px;border:none;background:transparent;color:var(--g400);font-family:'Playfair Display',serif;font-size:.88rem;cursor:pointer;transition:all .2s;touch-action:manipulation;font-weight:700}
+.tt-btn.on{background:var(--black);color:#fff}
+/* ── BOOK LIST ── */
+.book-list{display:flex;flex-direction:column;background:#fff;border-radius:var(--r);overflow:hidden;box-shadow:var(--sh)}
+.book-item{display:flex;align-items:center;padding:13px 16px;border-bottom:1px solid var(--g100);cursor:pointer;touch-action:manipulation;transition:background .12s}
+.book-item:last-child{border-bottom:none}.book-item:active{background:var(--g50)}
+.book-item-name{flex:1;font-size:.93rem;font-weight:600}
+.book-item-right{display:flex;align-items:center;gap:8px}
+.book-audio-pill{font-size:.65rem;font-weight:700;color:var(--blue);background:var(--blue-light);padding:3px 9px;border-radius:10px}
+.book-meta{font-size:.7rem;color:var(--g400)}
+.book-arrow{font-size:1.1rem;color:var(--g200)}
+.book-progress{width:40px;height:3px;background:var(--g100);border-radius:2px;overflow:hidden}
+.book-progress-fill{height:100%;background:var(--blue);border-radius:2px}
+/* ── CHAPTER PICKER ── */
+.chap-header{display:flex;align-items:center;gap:10px;padding:14px 0;margin-bottom:14px;border-bottom:2px solid var(--black)}
+.chap-back{background:#fff;border:1.5px solid var(--g200);border-radius:var(--rs);padding:8px 14px;font-size:.78rem;font-weight:700;cursor:pointer;color:var(--black);font-family:'DM Sans',sans-serif;touch-action:manipulation}
+.chap-title{font-family:'Playfair Display',serif;font-size:1.25rem;font-weight:900;flex:1}
+.chaps-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:10px}
+.chap-btn{aspect-ratio:1;border:1.5px solid var(--g200);border-radius:8px;background:#fff;color:var(--g400);font-size:.75rem;cursor:pointer;display:flex;align-items:center;justify-content:center;font-weight:600;touch-action:manipulation;transition:all .15s;position:relative}
+.chap-btn.has-audio{background:var(--blue-light);border-color:rgba(26,58,143,.35);color:var(--blue);font-weight:700}
+.chap-btn.sel{background:var(--blue);border-color:var(--blue);color:#fff}
+.chap-btn.cached::after{content:'📥';position:absolute;top:-4px;right:-4px;font-size:.5rem;background:#fff;border-radius:50%;width:12px;height:12px;display:flex;align-items:center;justify-content:center}
+.chap-legend{display:flex;gap:14px;margin-bottom:14px;font-size:.7rem;color:var(--g400);flex-wrap:wrap}
+.chap-legend span{display:flex;align-items:center;gap:5px}
+.leg-dot{width:10px;height:10px;border-radius:3px;display:inline-block;flex-shrink:0}
+/* ── AUDIO PLAYER ── */
+.player{background:var(--black);border-radius:var(--r);padding:20px 16px 16px;margin-bottom:14px;box-shadow:var(--shm)}
+.player-book{font-size:.62rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:4px}
+.player-title{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:900;color:#fff;margin-bottom:2px;line-height:1.1}
+.player-artist{font-size:.72rem;color:rgba(255,255,255,.4);margin-bottom:18px}
+.pbar-wrap{margin-bottom:6px;cursor:pointer;padding:10px 0}
+.pbar{width:100%;height:3px;background:rgba(255,255,255,.12);border-radius:2px;position:relative}
+.pbar-fill{height:100%;background:var(--amber);border-radius:2px;width:0%;transition:width .1s;position:relative}
+.pbar-fill::after{content:'';position:absolute;right:-7px;top:-5px;width:14px;height:14px;background:var(--amber);border-radius:50%;box-shadow:0 0 10px rgba(184,92,0,.5)}
+.ptime{display:flex;justify-content:space-between;font-size:.62rem;color:rgba(255,255,255,.3);margin-bottom:16px;font-weight:600;letter-spacing:.04em}
+.pcontrols{display:flex;align-items:center;justify-content:center;gap:18px;margin-bottom:14px}
+.pcbtn{background:none;border:none;color:rgba(255,255,255,.45);cursor:pointer;font-size:.8rem;padding:8px;touch-action:manipulation;font-family:'DM Sans',sans-serif;font-weight:700}
+.playbtn{width:58px;height:58px;background:var(--amber);border:none;border-radius:50%;color:#fff;font-size:1.4rem;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(184,92,0,.4);touch-action:manipulation;transition:transform .15s}
+.playbtn:active{transform:scale(.9)}
+.speeds{display:flex;justify-content:center;gap:5px;margin-bottom:14px}
+.spd{padding:5px 10px;border:1px solid rgba(255,255,255,.15);border-radius:20px;background:transparent;color:rgba(255,255,255,.35);font-size:.68rem;cursor:pointer;transition:all .18s;font-family:'DM Sans',sans-serif;font-weight:700;touch-action:manipulation}
+.spd.on{background:rgba(255,255,255,.15);border-color:rgba(255,255,255,.5);color:#fff}
+.player-nav{display:flex;gap:8px;margin-bottom:12px}
+.pnav{flex:1;padding:10px 6px;border:1px solid rgba(255,255,255,.15);border-radius:var(--rs);background:transparent;color:rgba(255,255,255,.5);font-size:.73rem;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;touch-action:manipulation;text-align:center}
+.pnav-mid{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.25);color:#fff}
+.save-offline-btn{display:flex;align-items:center;justify-content:center;gap:7px;padding:9px 18px;border:1px solid rgba(255,255,255,.2);border-radius:20px;color:rgba(255,255,255,.5);font-size:.72rem;font-weight:700;background:none;cursor:pointer;font-family:'DM Sans',sans-serif;width:100%;touch-action:manipulation;transition:all .2s}
+.save-offline-btn.saved{color:#4ade80;border-color:#4ade80}
+.no-audio-card{border:2px dashed var(--g200);border-radius:var(--r);padding:28px 20px;text-align:center;margin-bottom:14px;background:#fff}
+
+/* ── ADS CAROUSEL ── */
+.ad-carousel{margin:16px 0;overflow:hidden}
+.ad-label{font-size:.58rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--g400);margin-bottom:7px}
+.ad-track{display:flex;transition:transform .5s ease}
+.ad-slide{min-width:100%;box-sizing:border-box}
+.ad-dots{display:flex;justify-content:center;gap:5px;margin-top:8px}
+.ad-dot{width:6px;height:6px;border-radius:50%;background:var(--g200);cursor:pointer;transition:background .3s}
+.ad-dot.on{background:var(--blue)}
+.ad-banner{border-radius:var(--r);overflow:hidden;border:1.5px solid var(--g200);box-shadow:var(--sh);background:#fff}
+.ad-banner-img{width:100%;height:110px;object-fit:cover;display:block}
+.ad-banner-placeholder{height:70px;background:linear-gradient(135deg,var(--g100),var(--g50));display:flex;align-items:center;justify-content:center;font-size:1.8rem}
+.ad-banner-body{padding:12px 14px 14px}
+.ad-banner-name{font-family:'Playfair Display',serif;font-size:.95rem;font-weight:700;margin-bottom:3px}
+.ad-banner-tag{font-size:.78rem;color:var(--g600);margin-bottom:10px;line-height:1.45}
+.ad-wa{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:#25D366;color:#fff;border:none;border-radius:var(--rs);font-size:.8rem;font-weight:700;cursor:pointer;text-decoration:none;font-family:'DM Sans',sans-serif}
+.ad-text-card{background:#fff;border:1.5px solid var(--g200);border-radius:var(--r);padding:14px 16px;display:flex;align-items:center;gap:14px}
+.ad-text-info{flex:1}.ad-text-name{font-weight:700;font-size:.9rem;margin-bottom:3px}
+.ad-text-msg{font-size:.78rem;color:var(--g600);line-height:1.45}
+.ad-event-card{border:1.5px solid var(--g200);border-radius:var(--r);overflow:hidden;background:#fff}
+.ad-event-top{background:var(--black);padding:10px 14px;display:flex;align-items:center;justify-content:space-between}
+.ad-event-eyebrow{font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.4)}
+.ad-event-badge{font-size:.65rem;font-weight:700;color:#fff;background:rgba(255,255,255,.15);padding:3px 9px;border-radius:10px}
+.ad-event-body{padding:14px}
+.ad-event-name{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;margin-bottom:6px}
+.ad-event-meta{font-size:.73rem;color:var(--g600);margin-bottom:10px;line-height:1.7}
+/* ── TESTIMONY ── */
+.filter-row{display:flex;gap:6px;overflow-x:auto;padding-bottom:14px;margin-bottom:14px;border-bottom:1px solid var(--g100)}
+.filter-row::-webkit-scrollbar{display:none}
+.fchip{padding:7px 15px;border:1.5px solid var(--g200);border-radius:20px;background:#fff;color:var(--g600);font-size:.72rem;cursor:pointer;transition:all .18s;white-space:nowrap;font-family:'DM Sans',sans-serif;font-weight:700;touch-action:manipulation}
+.fchip.on{background:var(--amber);border-color:var(--amber);color:#fff}
+.featured-card{border-radius:var(--r);overflow:hidden;margin-bottom:16px;box-shadow:var(--shm);border:2px solid var(--amber)}
+.featured-label{background:var(--amber);color:#fff;font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:5px 12px;display:flex;align-items:center;gap:6px}
+.tcard{background:#fff;border-radius:var(--r);margin-bottom:12px;overflow:hidden;box-shadow:var(--sh)}
+.tcard-top{padding:14px 14px 0;display:flex;align-items:flex-start;gap:11px;margin-bottom:10px}
+.avatar{width:40px;height:40px;border-radius:50%;background:var(--black);display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:.95rem;font-weight:700;color:#fff;flex-shrink:0}
+.tcard-name{font-weight:700;font-size:.9rem;margin-bottom:3px}
+.tcard-meta{font-size:.68rem;color:var(--g400);display:flex;gap:8px;flex-wrap:wrap;line-height:1.5}
+.tcard-body{font-size:.85rem;line-height:1.75;color:#1a1a1a;padding:0 14px 12px}
+.tcard-audio{padding:0 14px 12px}
+.tcard-audio audio{width:100%;border-radius:8px;display:block}
+.tcard-audio-label{font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--amber);margin-top:4px}
+.tcard-yt{margin:0 14px 12px;border-radius:var(--rs);overflow:hidden;position:relative;padding-bottom:56.25%;height:0}
+.tcard-yt iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:none}
+.tcard-foot{padding:0 14px 14px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.share-btn{background:none;border:1.5px solid var(--g200);border-radius:20px;padding:5px 12px;font-size:.7rem;font-weight:700;cursor:pointer;color:var(--g600);font-family:'DM Sans',sans-serif;touch-action:manipulation;display:flex;align-items:center;gap:4px}
+.share-btn:active{background:var(--g50)}
+.voice-submit{background:#fff;border-radius:var(--r);padding:20px 16px;margin-top:20px;box-shadow:var(--sh)}
+.voice-submit h2{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:900;margin-bottom:6px}
+.voice-submit .sub{font-size:.83rem;color:var(--g600);line-height:1.65;margin-bottom:18px}
+.wa-send-btn{display:flex;align-items:center;gap:12px;padding:16px;background:#25D366;border-radius:var(--r);text-decoration:none;color:#fff;margin-bottom:14px;touch-action:manipulation}
+.wa-send-btn:active{opacity:.88}
+.wa-send-icon{font-size:2rem;flex-shrink:0}
+.wa-send-text{flex:1}
+.wa-send-title{font-weight:700;font-size:.95rem;margin-bottom:2px;display:block}
+.wa-send-sub{font-size:.75rem;opacity:.85;line-height:1.4;display:block}
+.or-divider{text-align:center;font-size:.72rem;color:var(--g400);font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin:14px 0;display:flex;align-items:center;gap:10px}
+.or-divider::before,.or-divider::after{content:'';flex:1;height:1px;background:var(--g200)}
+.pagination{display:flex;align-items:center;justify-content:center;gap:10px;margin-top:16px;padding-top:16px;border-top:1px solid var(--g100)}
+.page-btn{padding:8px 18px;border:1.5px solid var(--g200);border-radius:var(--rs);background:#fff;font-size:.78rem;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;touch-action:manipulation}
+.page-btn.disabled{opacity:.4;pointer-events:none}
+.page-info{font-size:.75rem;color:var(--g400);font-weight:600}
+.empty-msg{text-align:center;padding:40px 16px;color:var(--g400);font-size:.85rem;line-height:1.7;background:#fff;border-radius:var(--r)}
+/* ── EVENTS ── */
+.event-filters{display:flex;gap:6px;overflow-x:auto;padding-bottom:14px;margin-bottom:14px;border-bottom:1px solid var(--g100)}
+.event-filters::-webkit-scrollbar{display:none}
+.ecard{background:#fff;border-radius:var(--r);margin-bottom:12px;overflow:hidden;box-shadow:var(--sh)}
+.ecard.featured-event{border:2px solid var(--green)}
+.ecard-top{background:var(--black);padding:12px 14px;display:flex;align-items:center;justify-content:space-between}
+.ecard-date{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:900;color:#fff}
+.ecard-type-badge{font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;padding:3px 9px;border-radius:10px;background:rgba(255,255,255,.12);color:rgba(255,255,255,.7)}
+.ecard-body{padding:14px}
+.ecard-name{font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:700;margin-bottom:6px}
+.ecard-meta{font-size:.75rem;color:var(--g600);line-height:1.7;margin-bottom:12px}
+.ecard-foot{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.event-wa-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:#25D366;color:#fff;border:none;border-radius:var(--rs);font-size:.78rem;font-weight:700;cursor:pointer;text-decoration:none;font-family:'DM Sans',sans-serif;touch-action:manipulation}
+.event-submit-form{background:#fff;border-radius:var(--r);padding:20px 16px;margin-top:20px;box-shadow:var(--sh)}
+.event-submit-form h2{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:900;margin-bottom:6px}
+.event-submit-form .sub{font-size:.83rem;color:var(--g600);line-height:1.65;margin-bottom:18px}
+/* ── MODAL ── */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:600;align-items:flex-end;justify-content:center}
+.modal-overlay.on{display:flex;animation:mfade .2s ease}
+@keyframes mfade{from{opacity:0}to{opacity:1}}
+.modal{background:#fff;border-radius:var(--r) var(--r) 0 0;padding:24px 20px 36px;width:100%;max-width:500px;max-height:92vh;overflow-y:auto;animation:mslide .25s ease}
+@keyframes mslide{from{transform:translateY(40px)}to{transform:translateY(0)}}
+.modal-title{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:900;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between}
+.modal-close{background:none;border:none;font-size:1.4rem;cursor:pointer;color:var(--g400);touch-action:manipulation;padding:4px}
+/* ── ADMIN ── */
+.admin-overlay{display:none;position:fixed;inset:0;background:var(--off);z-index:500;overflow-y:auto;padding-bottom:40px}
+.admin-overlay.on{display:block;animation:fu .2s ease}
+.admin-hdr{position:sticky;top:0;background:var(--black);padding:0 16px;height:54px;display:flex;align-items:center;justify-content:space-between;z-index:10}
+.admin-hdr-title{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:900;color:#fff}
+.admin-x{background:none;border:none;font-size:1.5rem;cursor:pointer;color:rgba(255,255,255,.6);padding:8px;line-height:1;touch-action:manipulation}
+.admin-body{max-width:640px;margin:0 auto;padding:20px 16px}
+.admin-lock{text-align:center;padding:50px 20px 20px}
+.admin-lock h2{font-family:'Playfair Display',serif;font-size:1.7rem;font-weight:900;margin-bottom:8px}
+.admin-lock p{font-size:.85rem;color:var(--g600);margin-bottom:26px}
+.admin-sec{font-size:.65rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;margin:24px 0 12px;padding-bottom:8px;border-bottom:2px solid var(--black);display:flex;align-items:center;justify-content:space-between}
+.stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.stat{background:#fff;border-radius:var(--rs);padding:14px;text-align:center;box-shadow:var(--sh)}
+.stat-n{font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:900;line-height:1}
+.stat-l{font-size:.58rem;color:var(--g400);text-transform:uppercase;letter-spacing:.08em;margin-top:4px;font-weight:700}
+.pcard{background:#fff;border-radius:var(--r);padding:14px;margin-bottom:10px;box-shadow:var(--sh)}
+.pcard-title{font-weight:700;font-size:.9rem;margin-bottom:4px}
+.pcard-meta{font-size:.7rem;color:var(--g400);margin-bottom:7px;line-height:1.4}
+.pcard-body{font-size:.8rem;color:var(--g600);line-height:1.55;margin-bottom:10px}
+.pcard-acts{display:flex;gap:7px;flex-wrap:wrap}
+.live-row{background:#fff;border-radius:var(--rs);padding:12px 14px;margin-bottom:8px;display:flex;align-items:center;gap:10px;box-shadow:var(--sh)}
+.live-row-info{flex:1;min-width:0}
+.live-row-name{font-weight:700;font-size:.88rem;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.live-row-sub{font-size:.65rem;color:var(--g400);text-transform:uppercase;letter-spacing:.06em;font-weight:700}
+@media(max-width:360px){.chaps-grid{grid-template-columns:repeat(5,1fr)}.stat-grid{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+
+<div class="loading-screen" id="loadingScreen">
+  <div class="loading-logo">Amen <span>i</span>Testify</div>
+  <div class="loading-bar"><div class="loading-fill"></div></div>
+</div>
+
+<div class="offline-bar" id="offlineBar">⚠ You are offline. Connect to stream audio.</div>
+
+<header>
+  <div class="logo" id="logo">
+    <span class="logo-text">Amen<span class="logo-i">i</span><span class="logo-light">Testify</span></span>
+  </div>
+  <span class="hdate" id="hdate"></span>
+</header>
+
+<div class="pwa-banner" id="pwaBanner">
+  <div class="pwa-banner-text">📲 Install Amen iTestify on your phone<span>Tap to add to home screen — works like an app</span></div>
+  <button class="pwa-install-btn" onclick="installPWA()">Install</button>
+  <button class="pwa-dismiss" onclick="dismissPWA()">×</button>
+</div>
+
+<!-- ════ BIBLE PANEL ════ -->
+<div class="panel on" id="p-bible">
+  <div class="hero">
+    <div class="hero-eye hero-eye-blue">📖 Audio Bible</div>
+    <h1>The Word.<br><em style="color:var(--amber)">In our voice.</em></h1>
+    <p>The Bible. In a voice that sounds like home. Play it while you cook, commute, work or rest. No extra effort required.</p>
+    <div class="hero-stats">
+      <div class="hero-stat"><div class="hero-stat-n" id="totalPlays">0</div><div class="hero-stat-l">Chapters Played</div></div>
+      <div class="hero-stat"><div class="hero-stat-n" id="totalChapters">0</div><div class="hero-stat-l">Audio Ready</div></div>
+    </div>
+  </div>
+  <div id="continueBanner"></div>
+  <div id="playerWrap"></div>
+  <div id="bibleAdWrap"></div>
+  <div id="bookPicker">
+    <div class="voice-tabs">
+      <button class="vtab on" onclick="setVoice('default',this)">🎙 All Voices</button>
+      <button class="vtab" onclick="setVoice('female',this)">👩 Female Voice</button>
+      <button class="vtab" onclick="setVoice('male',this)">👨 Male Voice</button>
+    </div>
+    <div style="font-size:.72rem;color:var(--g600);margin-bottom:14px;padding:8px 12px;background:#fff;border-radius:var(--rs);line-height:1.6">
+      <strong>How voices work:</strong> Blue chapters have audio for your selected voice. Grey chapters have no recording yet for that voice — switch to All Voices to see what is available.
+    </div>
+    <div class="testament-row">
+      <button class="tt-btn on" id="ot-btn" onclick="setTestament('OT')">📜 Old Testament</button>
+      <button class="tt-btn" id="nt-btn" onclick="setTestament('NT')">✝ New Testament</button>
+    </div>
+    <div class="book-list" id="bookList"></div>
+  </div>
+  <div id="chapPicker" style="display:none">
+    <div class="chap-header">
+      <button class="chap-back" onclick="backToBooks()">← Books</button>
+      <span class="chap-title" id="chapTitle">Genesis</span>
+    </div>
+    <div class="chap-legend">
+      <span><span class="leg-dot" style="background:var(--blue-light);border:1.5px solid rgba(26,58,143,.35)"></span>Audio ready</span>
+      <span><span class="leg-dot" style="background:#eee;border:1.5px solid var(--g200)"></span>Coming soon</span>
+      <span><span style="font-size:.7rem">📥</span>Saved offline</span>
+    </div>
+    <div class="chaps-grid" id="chapsGrid"></div>
+  </div>
+</div>
+
+<!-- ════ TESTIFY PANEL ════ -->
+<div class="panel" id="p-testi">
+  <div class="hero">
+    <div class="hero-eye hero-eye-amber">🙏 Daily Testimonies</div>
+    <h1>Real people.<br><em style="color:var(--amber)">Trying times. What happened next.</em></h1>
+    <p>Sometimes you just need to hear that someone else made it through. These are their stories.</p>
+  </div>
+  <div class="filter-row" id="testiFilterRow"></div>
+  <div id="testiAdWrap"></div>
+  <div id="featuredTesti"></div>
+  <div id="testiList"></div>
+  <div id="testiPagination"></div>
+  <div class="voice-submit">
+    <h2>Been through something?</h2>
+    <p class="sub">Been through something real? Share it in your own voice. Send us a WhatsApp voice note and we publish it for the community to hear.</p>
+    <a id="waVoiceBtn" href="#" target="_blank" rel="noopener" class="wa-send-btn">
+      <span class="wa-send-icon">🎙</span>
+      <span class="wa-send-text">
+        <span class="wa-send-title">Send us your story as a voice note on WhatsApp</span>
+        <span class="wa-send-sub">Tap to open WhatsApp — just talk, we do the rest</span>
+      </span>
+    </a>
+    <div class="or-divider">or write a short summary below</div>
+    <div class="frow">
+      <div class="fgroup"><label class="flabel">Your Name *</label><input class="finput" id="t-name" placeholder="e.g. Adaeze or just leave as Anonymous"/></div>
+      <div class="fgroup"><label class="flabel">State</label><input class="finput" id="t-state" placeholder="e.g. Anambra"/></div>
+    </div>
+    <div class="frow">
+      <div class="fgroup"><label class="flabel">Category *</label>
+        <select class="fselect" id="t-cat">
+          <option value="">Select</option>
+          <option value="healing">Healing and Health</option>
+          <option value="financial">Financial Breakthrough</option>
+          <option value="marriage">Marriage and Family</option>
+          <option value="business">Business Success</option>
+          <option value="overcoming">Overcoming</option>
+          <option value="faith">Faith Journey</option>
+        </select>
+      </div>
+      <div class="fgroup"><label class="flabel">Church</label><input class="finput" id="t-church" placeholder="e.g. Living Faith Church (optional)"/></div>
+    </div>
+    <div class="fgroup"><label class="flabel">Short Summary (Optional)</label><textarea class="ftextarea" id="t-body" placeholder="What happened? A few lines is enough..."></textarea></div>
+    <button class="btn btn-amber" onclick="submitTestimony()">Send Your Story</button>
+  </div>
+</div>
+
+<!-- ════ EVENTS PANEL ════ -->
+<div class="panel" id="p-events">
+  <div class="hero">
+    <div class="hero-eye hero-eye-green">📅 Events</div>
+    <h1>Events happening<br><em style="color:#4ade80">across Nigeria.</em></h1>
+    <p>Church programmes, conferences, concerts and more. Know about something happening? Tell us — even if you are not the organiser.</p>
+  </div>
+  <div class="event-filters" id="eventFilterRow"></div>
+  <div id="eventAdWrap"></div>
+  <div id="eventList"></div>
+  <div id="eventPagination"></div>
+  <div class="event-submit-form">
+    <h2>Know about an event?</h2>
+    <p class="sub">Whether it is your event or one you found out about — submit it here. We review and publish within 24 hours.</p>
+    <div class="frow">
+      <div class="fgroup"><label class="flabel">Event Name *</label><input class="finput" id="ev-name" placeholder="e.g. Fire and Grace Conference 2025"/></div>
+      <div class="fgroup"><label class="flabel">Type *</label>
+        <select class="fselect" id="ev-type">
+          <option value="Church">Church Programme</option>
+          <option value="Conference">Conference</option>
+          <option value="Crusade">Crusade</option>
+          <option value="Concert">Concert</option>
+          <option value="Prayer">Prayer Meeting</option>
+          <option value="Community">Community</option>
+        </select>
+      </div>
+    </div>
+    <div class="frow">
+      <div class="fgroup"><label class="flabel">Date *</label><input class="finput" type="date" id="ev-date"/></div>
+      <div class="fgroup"><label class="flabel">Time</label><input class="finput" id="ev-time" placeholder="7AM and 9AM"/></div>
+    </div>
+    <div class="frow">
+      <div class="fgroup"><label class="flabel">Location *</label><input class="finput" id="ev-location" placeholder="e.g. Grace Arena, Ikeja"/></div>
+      <div class="fgroup"><label class="flabel">State *</label>
+        <select class="fselect" id="ev-state">
+          <option value="">Select state</option>
+          <option>Abia</option><option>Adamawa</option><option>Akwa Ibom</option><option>Anambra</option>
+          <option>Bauchi</option><option>Bayelsa</option><option>Benue</option><option>Borno</option>
+          <option>Cross River</option><option>Delta</option><option>Ebonyi</option><option>Edo</option>
+          <option>Ekiti</option><option>Enugu</option><option>FCT Abuja</option><option>Gombe</option>
+          <option>Imo</option><option>Jigawa</option><option>Kaduna</option><option>Kano</option>
+          <option>Katsina</option><option>Kebbi</option><option>Kogi</option><option>Kwara</option>
+          <option>Lagos</option><option>Nasarawa</option><option>Niger</option><option>Ogun</option>
+          <option>Ondo</option><option>Osun</option><option>Oyo</option><option>Plateau</option>
+          <option>Rivers</option><option>Sokoto</option><option>Taraba</option><option>Yobe</option>
+          <option>Zamfara</option>
+        </select>
+      </div>
+    </div>
+    <div class="frow">
+      <div class="fgroup"><label class="flabel">Church / Organisation</label><input class="finput" id="ev-church" placeholder="e.g. New Dawn Christian Centre"/></div>
+      <div class="fgroup"><label class="flabel">Organiser Name</label><input class="finput" id="ev-organiser" placeholder="e.g. Pastor Chukwuemeka Obi"/></div>
+    </div>
+    <div class="fgroup"><label class="flabel">Description</label><textarea class="ftextarea" id="ev-desc" placeholder="Brief description of the event..." style="min-height:70px"></textarea></div>
+    <div class="fgroup"><label class="flabel">WhatsApp for Enquiries *</label><input class="finput" id="ev-wa" placeholder="+2348012345678"/></div>
+    <div style="background:var(--g50);border-radius:var(--rs);padding:12px 14px;margin-bottom:14px;font-size:.78rem;color:var(--g600);line-height:1.6">
+      💡 Want your event to stand out? Contact us after submitting. Featured events get more eyes.
+    </div>
+    <button class="btn btn-green" onclick="submitEvent()">Submit This Event</button>
+    <div id="ev-msg" style="display:none;font-size:.78rem;color:var(--green);margin-top:8px;font-weight:700"></div>
+  </div>
+</div>
+
+<!-- ════ ADMIN ════ -->
+<div class="admin-overlay" id="adminOverlay">
+  <div class="admin-hdr">
+    <span class="admin-hdr-title">Admin — Amen iTestify</span>
+    <button class="admin-x" onclick="closeAdmin()">×</button>
+  </div>
+  <div class="admin-body">
+    <div id="adminLock" class="admin-lock">
+      <div style="font-size:3rem;margin-bottom:16px">🔐</div>
+      <h2>Admin Access</h2>
+      <p>Authorised personnel only.</p>
+      <div style="max-width:280px;margin:0 auto">
+        <div class="fgroup">
+          <div style="position:relative">
+            <input class="finput" type="password" id="adminPw" placeholder="Enter password" onkeydown="if(event.key==='Enter')checkAdmin()" style="padding-right:46px"/>
+            <button onclick="toggleEye()" id="eyeBtn" type="button" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;font-size:1.1rem;cursor:pointer;color:var(--g400);padding:4px;touch-action:manipulation">👁</button>
+          </div>
+        </div>
+        <button class="btn btn-black" onclick="checkAdmin()">Enter →</button>
+      </div>
+    </div>
+    <div id="adminDash" style="display:none">
+      <div class="admin-sec">Dashboard <button onclick="reloadData()" style="background:var(--blue);color:#fff;border:none;border-radius:6px;padding:5px 12px;font-size:.68rem;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;touch-action:manipulation">↻ Refresh</button></div>
+      <div class="stat-grid">
+        <div class="stat"><div class="stat-n" id="s-audio">0</div><div class="stat-l">Audio Chs</div></div>
+        <div class="stat"><div class="stat-n" id="s-live">0</div><div class="stat-l">Testimonies</div></div>
+        <div class="stat"><div class="stat-n" id="s-events">0</div><div class="stat-l">Events</div></div>
+      </div>
+      <div class="stat-grid" style="margin-top:8px">
+        <div class="stat"><div class="stat-n" id="s-pend">0</div><div class="stat-l">Pending</div></div>
+        <div class="stat"><div class="stat-n" id="s-ads">0</div><div class="stat-l">Live Ads</div></div>
+        <div class="stat"><div class="stat-n" id="s-earn" style="font-size:1rem">₦0</div><div class="stat-l">Earned</div></div>
+      </div>
+
+      <div class="admin-sec">Platform Settings</div>
+      <div class="card">
+        <div class="fgroup"><label class="flabel">Your WhatsApp Number *</label><input class="finput" id="cfg-wa" placeholder="+2348012345678"/><div style="font-size:.7rem;color:var(--g400);margin-top:4px">Testimony voice notes and enquiries come here</div></div>
+        <div class="fgroup"><label class="flabel">YouTube Channel URL</label><input class="finput" id="cfg-yt" placeholder="https://youtube.com/@yourchannel"/></div>
+        <button class="btn btn-black btn-sm" onclick="saveSettings()">Save Settings</button>
+      </div>
+
+      <div class="admin-sec">🎙 Upload Bible Audio</div>
+      <div class="card">
+        <p style="font-size:.8rem;color:var(--g600);margin-bottom:14px;line-height:1.6">Record with Dolby On → Upload to Bunny.net → Paste URL here → Goes live instantly on all phones</p>
+        <div class="frow">
+          <div class="fgroup"><label class="flabel">Book</label><select class="fselect" id="up-book" onchange="updateChapSel()"></select></div>
+          <div class="fgroup"><label class="flabel">Chapter</label><select class="fselect" id="up-chap"></select></div>
+        </div>
+        <div class="fgroup">
+          <label class="flabel">Voice Type *</label>
+          <select class="fselect" id="up-voice">
+            <option value="default">🎙 My Voice — Default (shows on All Voices tab)</option>
+            <option value="female">👩 Female Voice (shows on Female Voice tab)</option>
+            <option value="male">👨 Male Voice (shows on Male Voice tab)</option>
+          </select>
+          <div style="font-size:.68rem;color:var(--g400);margin-top:4px">Choose which voice tab this recording appears under on the frontend</div>
+        </div>
+        <div class="fgroup"><label class="flabel">Bunny.net Audio URL *</label><input class="finput" id="up-url" placeholder="https://amenitestify.b-cdn.net/Genesis_001.m4a"/></div>
+        <div class="fgroup"><label class="flabel">Voice Artist Name</label><input class="finput" id="up-artist" placeholder="e.g. Sister Ada — Lagos"/></div>
+        <button class="btn btn-blue btn-sm" onclick="saveAudio()">Save and Go Live</button>
+        <div id="up-msg" style="display:none;font-size:.78rem;color:var(--green);margin-top:8px;font-weight:700"></div>
+      </div>
+
+      <div class="admin-sec">🙏 Pending Testimonies</div>
+      <div id="pendingList"></div>
+
+      <div class="admin-sec">🎙 Publish Voice Testimony</div>
+      <div class="card">
+        <p style="font-size:.8rem;color:var(--g600);margin-bottom:14px;line-height:1.6">Someone sent a voice note on WhatsApp? Upload to Bunny.net first, then publish it directly here. Goes live immediately.</p>
+        <div class="frow">
+          <div class="fgroup"><label class="flabel">Name (Optional)</label><input class="finput" id="vt-name" placeholder="e.g. Sister Ada or Anonymous"/></div>
+          <div class="fgroup"><label class="flabel">State (Optional)</label><input class="finput" id="vt-state" placeholder="e.g. Delta"/></div>
+        </div>
+        <div class="frow">
+          <div class="fgroup">
+            <label class="flabel">Category *</label>
+            <select class="fselect" id="vt-cat">
+              <option value="">Select category</option>
+              <option value="healing">Healing and Health</option>
+              <option value="financial">Financial Breakthrough</option>
+              <option value="marriage">Marriage and Family</option>
+              <option value="business">Business Success</option>
+              <option value="overcoming">Overcoming</option>
+              <option value="faith">Faith Journey</option>
+            </select>
+          </div>
+          <div class="fgroup"><label class="flabel">Church (Optional)</label><input class="finput" id="vt-church" placeholder="e.g. Living Faith Church (optional)"/></div>
+        </div>
+        <div class="fgroup"><label class="flabel">Bunny.net Voice Audio URL *</label><input class="finput" id="vt-url" placeholder="https://amenitestify.b-cdn.net/testimony_voice.m4a"/></div>
+        <div class="fgroup"><label class="flabel">Short Written Description (Optional)</label><textarea class="ftextarea" id="vt-body" placeholder="Brief summary of what the testimony is about..." style="min-height:60px"></textarea></div>
+        <button class="btn btn-amber btn-sm" onclick="publishVoiceTestimony()">Publish Voice Testimony Live</button>
+        <div id="vt-msg" style="display:none;font-size:.78rem;color:var(--green);margin-top:8px;font-weight:700"></div>
+      </div>
+
+      <div class="admin-sec">➕ Add Audio to Written Testimony</div>
+      <div class="card">
+        <p style="font-size:.8rem;color:var(--g600);margin-bottom:14px;line-height:1.6">Someone submitted a written summary and later sent a voice note? Add the audio to their existing story here.</p>
+        <div class="fgroup"><label class="flabel">Select Written Testimony</label><select class="fselect" id="ta-sel"><option value="">Loading...</option></select></div>
+        <div class="fgroup"><label class="flabel">Bunny.net Audio URL *</label><input class="finput" id="ta-url" placeholder="https://amenitestify.b-cdn.net/testimony_voice.m4a"/></div>
+        <button class="btn btn-blue btn-sm" onclick="saveTestimonyAudio()">Add Voice to Testimony</button>
+        <div id="ta-msg" style="display:none;font-size:.78rem;color:var(--green);margin-top:8px;font-weight:700"></div>
+      </div>
+
+      <div class="admin-sec">⭐ Feature a Testimony</div>
+      <div class="card">
+        <p style="font-size:.8rem;color:var(--g600);margin-bottom:14px;line-height:1.6">Pin one testimony to the top of the feed this week. Only one can be featured at a time.</p>
+        <div class="fgroup"><label class="flabel">Select Testimony to Feature</label><select class="fselect" id="feat-sel"><option value="">Select testimony</option></select></div>
+        <button class="btn btn-black btn-sm" onclick="setFeatured()">Set as Featured</button>
+        <button class="btn btn-outline btn-sm" style="margin-top:6px" onclick="clearFeatured()">Clear Featured</button>
+        <div id="feat-msg" style="display:none;font-size:.78rem;color:var(--green);margin-top:8px;font-weight:700"></div>
+      </div>
+
+      <div class="admin-sec">📺 Add YouTube Testimony</div>
+      <div class="card">
+        <div class="frow">
+          <div class="fgroup"><label class="flabel">Name</label><input class="finput" id="yt-name" placeholder="e.g. Brother Emmanuel"/></div>
+          <div class="fgroup"><label class="flabel">State</label><input class="finput" id="yt-state" placeholder="e.g. Abuja"/></div>
+        </div>
+        <div class="fgroup"><label class="flabel">Category *</label>
+          <select class="fselect" id="yt-cat">
+            <option value="">Select</option>
+            <option value="healing">Healing and Health</option>
+            <option value="financial">Financial Breakthrough</option>
+            <option value="marriage">Marriage and Family</option>
+            <option value="business">Business Success</option>
+            <option value="overcoming">Overcoming</option>
+            <option value="faith">Faith Journey</option>
+          </select>
+        </div>
+        <div class="fgroup"><label class="flabel">Short Description</label><textarea class="ftextarea" id="yt-body" placeholder="Brief summary..." style="min-height:60px"></textarea></div>
+        <div class="fgroup"><label class="flabel">YouTube URL *</label><input class="finput" id="yt-url" placeholder="https://youtube.com/watch?v=..."/></div>
+        <button class="btn btn-blue btn-sm" onclick="addYouTubeTestimony()">Publish to Feed</button>
+        <div id="yt-msg" style="display:none;font-size:.78rem;color:var(--green);margin-top:8px;font-weight:700"></div>
+      </div>
+
+      <div class="admin-sec">📅 Add Event Directly</div>
+      <div class="card">
+        <p style="font-size:.8rem;color:var(--g600);margin-bottom:14px;line-height:1.6">Someone sent event details on WhatsApp? Add the event directly here — goes live immediately.</p>
+        <div class="frow">
+          <div class="fgroup"><label class="flabel">Event Name *</label><input class="finput" id="aev-name" placeholder="e.g. Fire and Grace Conference 2025"/></div>
+          <div class="fgroup"><label class="flabel">Type</label>
+            <select class="fselect" id="aev-type">
+              <option value="Church">Church Programme</option>
+              <option value="Conference">Conference</option>
+              <option value="Crusade">Crusade</option>
+              <option value="Concert">Concert</option>
+              <option value="Prayer">Prayer Meeting</option>
+              <option value="Community">Community</option>
+            </select>
+          </div>
+        </div>
+        <div class="frow">
+          <div class="fgroup"><label class="flabel">Date</label><input class="finput" type="date" id="aev-date"/></div>
+          <div class="fgroup"><label class="flabel">Time</label><input class="finput" id="aev-time" placeholder="7AM and 9AM"/></div>
+        </div>
+        <div class="frow">
+          <div class="fgroup"><label class="flabel">Location *</label><input class="finput" id="aev-location" placeholder="e.g. Grace Arena, Ikeja"/></div>
+          <div class="fgroup"><label class="flabel">State *</label>
+            <select class="fselect" id="aev-state">
+              <option value="">Select</option>
+              <option>Abia</option><option>Adamawa</option><option>Akwa Ibom</option><option>Anambra</option>
+              <option>Bauchi</option><option>Bayelsa</option><option>Benue</option><option>Borno</option>
+              <option>Cross River</option><option>Delta</option><option>Ebonyi</option><option>Edo</option>
+              <option>Ekiti</option><option>Enugu</option><option>FCT Abuja</option><option>Gombe</option>
+              <option>Imo</option><option>Jigawa</option><option>Kaduna</option><option>Kano</option>
+              <option>Katsina</option><option>Kebbi</option><option>Kogi</option><option>Kwara</option>
+              <option>Lagos</option><option>Nasarawa</option><option>Niger</option><option>Ogun</option>
+              <option>Ondo</option><option>Osun</option><option>Oyo</option><option>Plateau</option>
+              <option>Rivers</option><option>Sokoto</option><option>Taraba</option><option>Yobe</option>
+              <option>Zamfara</option>
+            </select>
+          </div>
+        </div>
+        <div class="frow">
+          <div class="fgroup"><label class="flabel">Church / Organisation</label><input class="finput" id="aev-church" placeholder="e.g. Living Waters Assembly"/></div>
+          <div class="fgroup"><label class="flabel">Organiser Name</label><input class="finput" id="aev-organiser" placeholder="e.g. Pastor Chukwuemeka Obi"/></div>
+        </div>
+        <div class="fgroup"><label class="flabel">Description</label><textarea class="ftextarea" id="aev-desc" placeholder="Brief description..." style="min-height:60px"></textarea></div>
+        <div class="fgroup"><label class="flabel">WhatsApp for Enquiries</label><input class="finput" id="aev-wa" placeholder="+2348012345678"/></div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn btn-green btn-sm" onclick="adminAddEvent(false)">Publish Event Live</button>
+          <button class="btn btn-black btn-sm" onclick="adminAddEvent(true)">⭐ Publish as Featured</button>
+        </div>
+        <div id="aev-msg" style="display:none;font-size:.78rem;color:var(--green);margin-top:8px;font-weight:700"></div>
+      </div>
+
+      <div class="admin-sec">📅 Pending Events</div>
+      <div id="pendingEvents"></div>
+
+      <div class="admin-sec">📢 Create Ad</div>
+      <div class="card">
+        <div class="fgroup"><label class="flabel">Ad Format *</label>
+          <select class="fselect" id="ad-fmt" onchange="showAdFields()">
+            <option value="">Select format</option>
+            <option value="banner">🖼 Banner Card — ₦15,000/week</option>
+            <option value="text">📝 Text Only — ₦8,000/week</option>
+            <option value="event">📅 Event Spotlight — ₦8,000/event</option>
+          </select>
+        </div>
+        <div id="adf-banner" style="display:none">
+          <div class="fgroup"><label class="flabel">Business Name *</label><input class="finput" id="ab-name" placeholder="e.g. Shalom Faith Academy"/></div>
+          <div class="fgroup"><label class="flabel">Tagline *</label><input class="finput" id="ab-tag" placeholder="Excellence. Faith. Leadership."/></div>
+          <div class="fgroup"><label class="flabel">Image URL (optional)</label><input class="finput" id="ab-img" placeholder="https://..."/></div>
+          <div class="fgroup"><label class="flabel">WhatsApp Number *</label><input class="finput" id="ab-wa" placeholder="+2348012345678"/></div>
+          <div class="frow">
+            <div class="fgroup"><label class="flabel">Amount Paid (₦)</label><input class="finput" type="number" id="ab-amt" placeholder="15000"/></div>
+            <div class="fgroup"><label class="flabel">Expiry Date</label><input class="finput" type="date" id="ab-exp"/></div>
+          </div>
+        </div>
+        <div id="adf-text" style="display:none">
+          <div class="fgroup"><label class="flabel">Business Name *</label><input class="finput" id="at-name" placeholder="e.g. Graceland Stores Nigeria"/></div>
+          <div class="fgroup"><label class="flabel">Short Message *</label><input class="finput" id="at-msg" placeholder="Shop faith-inspired gifts this season"/></div>
+          <div class="fgroup"><label class="flabel">WhatsApp Number *</label><input class="finput" id="at-wa" placeholder="+2348012345678"/></div>
+          <div class="frow">
+            <div class="fgroup"><label class="flabel">Amount Paid (₦)</label><input class="finput" type="number" id="at-amt" placeholder="8000"/></div>
+            <div class="fgroup"><label class="flabel">Expiry Date</label><input class="finput" type="date" id="at-exp"/></div>
+          </div>
+        </div>
+        <div id="adf-event" style="display:none">
+          <div class="fgroup"><label class="flabel">Event Name *</label><input class="finput" id="ae-name" placeholder="e.g. Fire and Grace Conference 2025"/></div>
+          <div class="fgroup"><label class="flabel">Type</label>
+            <select class="fselect" id="ae-type">
+              <option value="Church">Church / Ministry</option><option value="Business">Business</option>
+              <option value="Conference">Conference</option><option value="Community">Community</option>
+            </select>
+          </div>
+          <div class="frow">
+            <div class="fgroup"><label class="flabel">Date *</label><input class="finput" type="date" id="ae-date"/></div>
+            <div class="fgroup"><label class="flabel">Time</label><input class="finput" id="ae-time" placeholder="7AM and 9AM"/></div>
+          </div>
+          <div class="fgroup"><label class="flabel">Location *</label><input class="finput" id="ae-loc" placeholder="e.g. Redemption Hall, Surulere"/></div>
+          <div class="fgroup"><label class="flabel">WhatsApp Number *</label><input class="finput" id="ae-wa" placeholder="+2348012345678"/></div>
+          <div class="frow">
+            <div class="fgroup"><label class="flabel">Amount Paid (₦)</label><input class="finput" type="number" id="ae-amt" placeholder="8000"/></div>
+            <div class="fgroup"><label class="flabel">Expiry Date</label><input class="finput" type="date" id="ae-exp"/></div>
+          </div>
+        </div>
+        <div id="ad-submit-wrap" style="display:none;margin-top:8px">
+          <button class="btn btn-green" onclick="createAd()">Publish Ad Live Now</button>
+        </div>
+        <div id="ad-msg" style="display:none;font-size:.78rem;color:var(--green);margin-top:8px;font-weight:700"></div>
+      </div>
+
+      <div class="admin-sec">Live Ads</div>
+      <div id="liveAdsList"></div>
+
+      <div class="admin-sec">📬 Ad Requests</div>
+      <div id="adRequestsList"></div>
+
+      <div class="admin-sec">Live Testimonies</div>
+      <div id="liveTestiList"></div>
+
+      <div style="margin-top:28px"><button class="btn btn-outline" onclick="logoutAdmin()">🔒 Logout</button></div>
+    </div>
+  </div>
+</div>
+
+<nav class="bnav">
+  <button class="bni on-bible" id="n-bible" onclick="showTab('bible')"><span class="ic">📖</span>Bible</button>
+  <button class="bni" id="n-testi" onclick="showTab('testi')"><span class="ic">🙏</span>Testify</button>
+  <button class="bni" id="n-events" onclick="showTab('events')"><span class="ic">📅</span>Events</button>
+</nav>
+
+<button class="fab-ad" id="fabAdBtn" onclick="openAdvertiseWA()">📢 Reach our audience</button>
+
+<div class="mini-player" id="miniPlayer">
+  <div class="mini-info">
+    <div class="mini-book" id="miniBook"></div>
+    <div class="mini-title" id="miniTitle"></div>
+  </div>
+  <div class="mini-bar-wrap"><div class="mini-bar-fill" id="miniBarFill"></div></div>
+  <button class="mini-btn" onclick="togglePlay()">⏯</button>
+  <button class="mini-btn" onclick="showTab('bible');window.scrollTo(0,0)" style="font-size:.9rem;color:rgba(255,255,255,.4)">↑</button>
+</div>
+
+<div class="toast" id="toast"></div>
+<audio id="ap" preload="none"></audio>
+<script>
+// ══ SUPABASE ══
+var SB_URL='https://hgzbbkhonbdyqmufvugy.supabase.co';
+var SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhnemJia2hvbmJkeXFtdWZ2dWd5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMzMjMwODgsImV4cCI6MjA4ODg5OTA4OH0.qdF70zzthYG61QLLhBRzcuqfVeTfuyv6-tBX30iqMLo';
+var ADMIN_PW='AmenNG2025';
+function sbFetch(path,opts){
+  var o=opts||{},h=o.headers||{};
+  h['apikey']=SB_KEY;h['Authorization']='Bearer '+SB_KEY;h['Content-Type']='application/json';h['Prefer']=o.prefer||'return=representation';
+  o.headers=h;
+  return fetch(SB_URL+'/rest/v1/'+path,o).then(function(r){
+    if(!r.ok)return r.text().then(function(t){throw new Error(t);});
+    var ct=r.headers.get('content-type')||'';
+    if(ct.includes('json')&&r.status!==204)return r.json();
+    return [];
+  });
+}
+function sbGet(t,q){return sbFetch(t+'?'+(q||''),{method:'GET'});}
+function sbPost(t,d){return sbFetch(t,{method:'POST',body:JSON.stringify(d)});}
+function sbPatch(t,q,d){return sbFetch(t+'?'+q,{method:'PATCH',body:JSON.stringify(d),prefer:'return=minimal'});}
+function sbDelete(t,q){return sbFetch(t+'?'+q,{method:'DELETE',prefer:'return=minimal'});}
+
+// ══ BIBLE DATA ══
+var BIBLE={OT:[{n:'Genesis',c:50},{n:'Exodus',c:40},{n:'Leviticus',c:27},{n:'Numbers',c:36},{n:'Deuteronomy',c:34},{n:'Joshua',c:24},{n:'Judges',c:21},{n:'Ruth',c:4},{n:'1 Samuel',c:31},{n:'2 Samuel',c:24},{n:'1 Kings',c:22},{n:'2 Kings',c:25},{n:'1 Chronicles',c:29},{n:'2 Chronicles',c:36},{n:'Ezra',c:10},{n:'Nehemiah',c:13},{n:'Esther',c:10},{n:'Job',c:42},{n:'Psalms',c:150},{n:'Proverbs',c:31},{n:'Ecclesiastes',c:12},{n:'Song of Solomon',c:8},{n:'Isaiah',c:66},{n:'Jeremiah',c:52},{n:'Lamentations',c:5},{n:'Ezekiel',c:48},{n:'Daniel',c:12},{n:'Hosea',c:14},{n:'Joel',c:3},{n:'Amos',c:9},{n:'Obadiah',c:1},{n:'Jonah',c:4},{n:'Micah',c:7},{n:'Nahum',c:3},{n:'Habakkuk',c:3},{n:'Zephaniah',c:3},{n:'Haggai',c:2},{n:'Zechariah',c:14},{n:'Malachi',c:4}],NT:[{n:'Matthew',c:28},{n:'Mark',c:16},{n:'Luke',c:24},{n:'John',c:21},{n:'Acts',c:28},{n:'Romans',c:16},{n:'1 Corinthians',c:16},{n:'2 Corinthians',c:13},{n:'Galatians',c:6},{n:'Ephesians',c:6},{n:'Philippians',c:4},{n:'Colossians',c:4},{n:'1 Thessalonians',c:5},{n:'2 Thessalonians',c:3},{n:'1 Timothy',c:6},{n:'2 Timothy',c:4},{n:'Titus',c:3},{n:'Philemon',c:1},{n:'Hebrews',c:13},{n:'James',c:5},{n:'1 Peter',c:5},{n:'2 Peter',c:3},{n:'1 John',c:5},{n:'2 John',c:1},{n:'3 John',c:1},{n:'Jude',c:1},{n:'Revelation',c:22}]};
+var CAT={healing:'💊 Healing',financial:'💰 Financial',marriage:'💍 Marriage',business:'💼 Business',overcoming:'⚡ Overcoming',faith:'✝ Faith Journey'};
+var CAT_COUNTS={};
+var STATES=['All States','Abia','Adamawa','Akwa Ibom','Anambra','Bauchi','Bayelsa','Benue','Borno','Cross River','Delta','Ebonyi','Edo','Ekiti','Enugu','FCT Abuja','Gombe','Imo','Jigawa','Kaduna','Kano','Katsina','Kebbi','Kogi','Kwara','Lagos','Nasarawa','Niger','Ogun','Ondo','Osun','Oyo','Plateau','Rivers','Sokoto','Taraba','Yobe','Zamfara'];
+var ETYPES=['All Types','Church Programme','Conference','Crusade','Concert','Prayer Meeting','Community'];
+
+
+
+// ══ STATE ══
+var S={testament:'OT',book:null,chapter:null,playing:false,speed:1,voice:'default',adminIn:false,taps:0,tapTimer:null,currentTab:'bible',testiPage:1,testiFilter:'all',eventPage:1,eventFilter:'all'};
+var audioMap={},allTestimonies=[],allAds=[],allEvents=[],allAdRequests=[],settings={whatsapp_number:'',youtube_url:''};
+var TESTI_PER_PAGE=10,EVENT_PER_PAGE=10,adTimer=null,deferredPrompt=null,cachedChapters={};
+
+// ══ PWA ══
+window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();deferredPrompt=e;if(!localStorage.getItem('pwaDismissed'))document.getElementById('pwaBanner').classList.add('on');});
+window.addEventListener('appinstalled',function(){document.getElementById('pwaBanner').classList.remove('on');});
+function installPWA(){if(deferredPrompt){deferredPrompt.prompt();deferredPrompt.userChoice.then(function(){deferredPrompt=null;document.getElementById('pwaBanner').classList.remove('on');});}}
+function dismissPWA(){document.getElementById('pwaBanner').classList.remove('on');localStorage.setItem('pwaDismissed','1');}
+
+// ══ OFFLINE ══
+function updateOffline(){document.getElementById('offlineBar').classList.toggle('on',!navigator.onLine);}
+window.addEventListener('online',updateOffline);window.addEventListener('offline',updateOffline);
+
+// ══ INIT ══
+window.addEventListener('load',function(){
+  setDate();updateOffline();
+  loadAllData();
+  setupLogoTap();
+  
+  buildFilterRows();
+  if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js').catch(function(){});
+  var lastTab=localStorage.getItem('lastTab')||'bible';
+  showTab(lastTab,true);
+  var last=localStorage.getItem('lastPlayed');
+  if(last){try{var lp=JSON.parse(last);renderContinueBanner(lp);}catch(e){}}
+  loadCachedChapters();
+});
+
+function loadAllData(){
+  var done=0,total=5;
+  function check(){done++;if(done>=total){var ls=document.getElementById('loadingScreen');if(ls){ls.classList.add('hidden');setTimeout(function(){ls.style.display='none';},400);}}}
+  sbGet('settings','id=eq.main').then(function(d){if(d&&d[0]){settings=d[0];updateWaBtn();}check();}).catch(check);
+  sbGet('audio_chapters','select=book,chapter,audio_url,artist_name,voice_type').then(function(d){
+    audioMap={};if(d)d.forEach(function(r){
+      var k=r.book+'_'+r.chapter+'_'+r.voice_type;
+      audioMap[k]={url:r.audio_url,artist:r.artist_name,voice:r.voice_type};
+      var dk=r.book+'_'+r.chapter+'_default';
+      if(!audioMap[dk])audioMap[dk]={url:r.audio_url,artist:r.artist_name,voice:r.voice_type};
+    });
+    renderBooks();updateStats();check();
+  }).catch(function(){renderBooks();check();});
+  sbGet('testimonies','status=eq.live&order=created_at.desc').then(function(d){
+    allTestimonies=d||[];
+    buildCatCounts();renderTestimonies();renderFeatured();updateTestimonySelects();check();
+  }).catch(check);
+  sbGet('ads','order=created_at.desc').then(function(d){allAds=d||[];renderAds('bible');renderAds('testi');renderAds('events');check();}).catch(check);
+  sbGet('events','status=eq.live&order=event_date.asc').then(function(d){
+    allEvents=(d||[]).filter(function(e){return !e.event_date||new Date(e.event_date)>=new Date(new Date().toDateString());});
+    renderEvents();check();
+  }).catch(function(){check();});
+  sbGet('play_counts','select=count').then(function(d){
+    var total=(d||[]).reduce(function(s,r){return s+(r.count||0);},0);
+    var el=document.getElementById('totalPlays');if(el)el.textContent=total.toLocaleString();
+  }).catch(function(){});
+}
+
+function reloadData(){
+  toast('Refreshing...');
+  loadAllData();
+  if(S.adminIn)setTimeout(refreshAdmin,1500);
+}
+
+// ══ DATE ══
+function setDate(){
+  var D=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  var M=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  var d=new Date();
+  document.getElementById('hdate').textContent=D[d.getDay()]+', '+d.getDate()+' '+M[d.getMonth()];
+}
+
+// ══ TABS ══
+function showTab(tab,silent){
+  S.currentTab=tab;localStorage.setItem('lastTab',tab);
+  document.querySelectorAll('.panel').forEach(function(p){p.classList.remove('on');});
+  document.querySelectorAll('.bni').forEach(function(b){b.classList.remove('on-bible','on-testi','on-events');});
+  document.getElementById('p-'+tab).classList.add('on');
+  document.getElementById('n-'+tab).classList.add('on-'+tab);
+  if(!silent)window.scrollTo(0,0);
+  try{gaEvent('tab_view',tab,tab);}catch(e){}
+}
+
+// ══ TOAST ══
+function toast(msg){var t=document.getElementById('toast');t.textContent=msg;t.classList.add('on');clearTimeout(t._t);t._t=setTimeout(function(){t.classList.remove('on');},3000);}
+
+// ══ LOGO TAP ══
+function setupLogoTap(){
+  document.getElementById('logo').addEventListener('click',function(){
+    S.taps++;clearTimeout(S.tapTimer);
+    if(S.taps>=5){S.taps=0;openAdmin();}
+    else{S.tapTimer=setTimeout(function(){S.taps=0;},2000);}
+  });
+}
+function openAdmin(){document.getElementById('adminOverlay').classList.add('on');document.body.style.overflow='hidden';if(S.adminIn)showAdminDash();}
+function closeAdmin(){document.getElementById('adminOverlay').classList.remove('on');document.body.style.overflow='';}
+
+// ══ READING PLAN ══
+
+// ══ STATS ══
+function updateStats(){
+  var tc=Object.keys(audioMap).filter(function(k){return !k.endsWith('_female')&&!k.endsWith('_male');}).length;
+  var el=document.getElementById('totalChapters');if(el)el.textContent=tc;
+}
+
+// ══ BIBLE ══
+function setVoice(type,el){
+  S.voice=type;
+  document.querySelectorAll('.vtab').forEach(function(b){b.classList.remove('on');});
+  el.classList.add('on');renderBooks();
+}
+function chapterHasAudio(book,chap,voice){
+  if(voice==='default')return !!(audioMap[book+'_'+chap+'_default']||audioMap[book+'_'+chap+'_female']||audioMap[book+'_'+chap+'_male']);
+  return !!(audioMap[book+'_'+chap+'_'+voice]);
+}
+function setTestament(t){
+  S.testament=t;S.book=null;S.chapter=null;
+  document.getElementById('ot-btn').classList.toggle('on',t==='OT');
+  document.getElementById('nt-btn').classList.toggle('on',t==='NT');
+  showBookPicker();renderBooks();window.scrollTo(0,0);
+}
+function renderBooks(){
+  var books=BIBLE[S.testament];var list=document.getElementById('bookList');if(!list)return;
+  var html='';
+  for(var i=0;i<books.length;i++){
+    var b=books[i],ac=0;
+    for(var k in audioMap){if(k.indexOf(b.n+'_')===0&&!k.endsWith('_female')&&!k.endsWith('_male'))ac++;}
+    var pct=Math.round((ac/b.c)*100);
+    html+='<div class="book-item" onclick="selectBook(\''+b.n.replace(/'/g,'&#39;')+'\')">'
+      +'<span class="book-item-name">'+b.n+'</span>'
+      +'<span class="book-item-right">'
+      +(ac?'<span class="book-audio-pill">▶ '+ac+'</span>':'')
+      +'<span class="book-meta">'+b.c+' ch</span>'
+      +(ac?'<span class="book-progress"><span class="book-progress-fill" style="width:'+pct+'%"></span></span>':'')
+      +'<span class="book-arrow">›</span>'
+      +'</span></div>';
+  }
+  list.innerHTML=html;
+}
+function selectBook(name){
+  S.book=name;S.chapter=null;
+  var all=BIBLE.OT.concat(BIBLE.NT),book=null;
+  for(var i=0;i<all.length;i++){if(all[i].n===name){book=all[i];break;}}
+  if(!book)return;
+  document.getElementById('chapTitle').textContent=name;
+  renderChapters(book);showChapPicker();window.scrollTo(0,0);
+  try{gaEvent('book_open','bible',name);}catch(e){}
+}
+function renderChapters(book){
+  var html='';
+  for(var i=1;i<=book.c;i++){
+    var ha=chapterHasAudio(book.n,i,S.voice);
+    var hasAnyAudio=chapterHasAudio(book.n,i,'default');
+    var cacheKey=book.n+'_'+i;var isCached=cachedChapters[cacheKey];
+    var title='';
+    if(!ha&&hasAnyAudio&&S.voice!=='default')title=' title="Default voice available — switch to All Voices"';
+    html+='<button class="chap-btn'+(ha?' has-audio':'')+(S.chapter===i?' sel':'')+(isCached?' cached':'')+'"'+title+' onclick="selectChap('+i+')">'+i+'</button>';
+  }
+  document.getElementById('chapsGrid').innerHTML=html;
+}
+function selectChap(num){
+  S.chapter=num;
+  var all=BIBLE.OT.concat(BIBLE.NT);
+  for(var i=0;i<all.length;i++){if(all[i].n===S.book){renderChapters(all[i]);break;}}
+  var data=getAudioData(S.book,num,S.voice);
+  if(!data){
+    var voiceLabel=S.voice==='female'?'female voice':S.voice==='male'?'male voice':'audio';
+    var hasDefault=getAudioData(S.book,num,'default');
+    var altMsg=hasDefault&&S.voice!=='default'?'<p style="font-size:.78rem;color:var(--blue);margin-top:8px;font-weight:600">This chapter has a default voice recording. Switch to All Voices to listen.</p>':'<p style="font-size:.82rem;color:var(--g600);line-height:1.65;margin-top:6px">Not recorded yet. We are adding new recordings regularly.</p>';
+    document.getElementById('playerWrap').innerHTML='<div class="no-audio-card"><span style="font-size:2rem;display:block;margin-bottom:10px">🎙</span><h3 style="font-family:\"Playfair Display\",serif;font-size:1.05rem;margin-bottom:6px">'+S.book+' Chapter '+num+'</h3><p style="font-size:.82rem;color:var(--g600);line-height:1.65">No '+voiceLabel+' recorded for this chapter yet.</p>'+altMsg+'</div>';
+    showChapPicker();return;
+  }
+  showBookPicker();playChapter(data,S.book,num);renderAds('bible');window.scrollTo(0,0);
+  localStorage.setItem('lastPlayed',JSON.stringify({book:S.book,chap:num,artist:data.artist||'',voice:S.voice}));
+  renderContinueBanner({book:S.book,chap:num,artist:data.artist||''});
+  trackPlay(S.book,num);
+  try{gaEvent('chapter_play','bible',S.book+' '+num);}catch(e){}
+}
+function getAudioData(book,chap,voice){
+  if(voice==='default')return audioMap[book+'_'+chap+'_default']||audioMap[book+'_'+chap+'_female']||audioMap[book+'_'+chap+'_male']||null;
+  return audioMap[book+'_'+chap+'_'+voice]||null;
+}
+function backToBooks(){S.book=null;S.chapter=null;document.getElementById('ap').pause();S.playing=false;showBookPicker();updateMiniPlayer();window.scrollTo(0,0);}
+function showBookPicker(){document.getElementById('bookPicker').style.display='block';document.getElementById('chapPicker').style.display='none';}
+function showChapPicker(){document.getElementById('bookPicker').style.display='none';document.getElementById('chapPicker').style.display='block';}
+
+// ══ PLAY COUNT TRACKING ══
+function trackPlay(book,chap){
+  var id=book+'_'+chap;
+  sbGet('play_counts','id=eq.'+encodeURIComponent(id)).then(function(d){
+    if(d&&d.length>0){sbPatch('play_counts','id=eq.'+encodeURIComponent(id),{count:(d[0].count||0)+1,updated_at:new Date().toISOString()}).catch(function(){});}
+    else{sbPost('play_counts',{id:id,book:book,chapter:chap,count:1}).catch(function(){});}
+  }).catch(function(){});
+}
+
+// ══ CONTINUE BANNER ══
+function renderContinueBanner(lp){
+  var el=document.getElementById('continueBanner');if(!el)return;
+  if(!lp||!lp.book)return;
+  el.innerHTML='<div class="continue-banner" onclick="resumeLastPlayed()">'
+    +'<span style="font-size:1.5rem">▶</span>'
+    +'<div class="continue-info">'
+    +'<div class="continue-label">Pick up where you left off</div>'
+    +'<div class="continue-title">'+lp.book+' — Chapter '+lp.chap+(lp.artist?' · '+lp.artist:'')+'</div>'
+    +'</div>'
+    +'<span style="color:rgba(255,255,255,.35);font-size:1.2rem">›</span>'
+    +'</div>';
+}
+function resumeLastPlayed(){
+  var last=localStorage.getItem('lastPlayed');if(!last)return;
+  try{var lp=JSON.parse(last);S.book=lp.book;S.chapter=lp.chap;selectBook(lp.book);setTimeout(function(){selectChap(lp.chap);},100);}catch(e){}
+}
+
+// ══ OFFLINE CACHE ══
+function loadCachedChapters(){
+  if('caches'in window){
+    caches.open('amenitestify-audio').then(function(cache){
+      cache.keys().then(function(keys){
+        keys.forEach(function(req){
+          var url=req.url;var m=url.match(/([A-Za-z0-9_\s]+)_(\d+)/);
+          if(m)cachedChapters[m[1]+'_'+m[2]]=true;
+        });
+      });
+    }).catch(function(){});
+  }
+}
+function saveForOffline(url,book,chap){
+  if(!('caches'in window)){toast('Offline saving not supported on this browser');return;}
+  toast('Saving for offline...');
+  caches.open('amenitestify-audio').then(function(cache){
+    return cache.add(new Request(url,{mode:'no-cors'}));
+  }).then(function(){
+    cachedChapters[book+'_'+chap]=true;
+    toast('✅ '+book+' Chapter '+chap+' saved for offline');
+    var btn=document.getElementById('offlineBtn');
+    if(btn){btn.textContent='✅ Saved Offline';btn.classList.add('saved');}
+  }).catch(function(){toast('Error saving — check your internet connection');});
+}
+
+// ══ AUDIO PLAYER ══
+function playChapter(data,bookName,num){
+  var ap=document.getElementById('ap');
+  ap.src=data.url;ap.playbackRate=S.speed;ap.play();S.playing=true;
+  var sH=[0.75,1,1.25,1.5,1.75,2].map(function(s){return'<button class="spd'+(s===S.speed?' on':'')+'" onclick="setSpd('+s+')">'+s+'x</button>';}).join('');
+  var isCached=cachedChapters[bookName+'_'+num];
+  document.getElementById('playerWrap').innerHTML=
+    '<div class="player">'
+    +'<div class="player-book">'+bookName+'</div>'
+    +'<div class="player-title">Chapter '+num+'</div>'
+    +'<div class="player-artist">'+(data.artist||'Nigerian Voice')+'</div>'
+    +'<div class="pbar-wrap" onclick="seekAudio(event)"><div class="pbar" id="pbar"><div class="pbar-fill" id="pfill"></div></div></div>'
+    +'<div class="ptime"><span id="pct">0:00</span><span id="ptot">0:00</span></div>'
+    +'<div class="pcontrols"><button class="pcbtn" onclick="skipA(-30)">-30s</button><button class="pcbtn" onclick="prevChap()">⏮</button><button class="playbtn" id="pbtn" onclick="togglePlay()">⏸</button><button class="pcbtn" onclick="nextChap()">⏭</button><button class="pcbtn" onclick="skipA(30)">+30s</button></div>'
+    +'<div class="speeds">'+sH+'</div>'
+    +'<div class="player-nav"><button class="pnav" onclick="prevChap()">← Prev</button><button class="pnav pnav-mid" onclick="backToBooks()">📚 All Books</button><button class="pnav" onclick="nextChap()">Next →</button></div>'
+    +'<button id="offlineBtn" class="save-offline-btn'+(isCached?' saved':'')+'" onclick="saveForOffline(\''+data.url+'\',\''+bookName+'\','+num+')">'+(isCached?'✅ Saved Offline':'📥 Save for Offline Listening')+'</button>'
+    +'</div>';
+  showMiniPlayer(bookName,num);
+  var ap2=document.getElementById('ap');
+  ap2.ontimeupdate=function(){
+    var p=ap2.duration?(ap2.currentTime/ap2.duration)*100:0;
+    var f=document.getElementById('pfill'),ct=document.getElementById('pct'),tt=document.getElementById('ptot');
+    if(f)f.style.width=p+'%';if(ct)ct.textContent=fmt(ap2.currentTime);if(tt)tt.textContent=fmt(ap2.duration||0);
+    updateMiniPlayer();
+  };
+  ap2.onended=function(){S.playing=false;var b=document.getElementById('pbtn');if(b)b.textContent='▶';nextChap();};
+}
+function togglePlay(){var ap=document.getElementById('ap'),b=document.getElementById('pbtn');if(ap.paused){ap.play();S.playing=true;if(b)b.textContent='⏸';}else{ap.pause();S.playing=false;if(b)b.textContent='▶';}}
+function skipA(s){var ap=document.getElementById('ap');ap.currentTime=Math.max(0,Math.min(ap.duration||0,ap.currentTime+s));}
+function seekAudio(e){var ap=document.getElementById('ap'),bar=document.getElementById('pbar');if(bar&&ap.duration)ap.currentTime=(e.offsetX/bar.offsetWidth)*ap.duration;}
+function setSpd(s){S.speed=s;document.getElementById('ap').playbackRate=s;document.querySelectorAll('.spd').forEach(function(b){b.classList.toggle('on',parseFloat(b.textContent)===s);});}
+function fmt(s){if(!s||isNaN(s))return'0:00';return Math.floor(s/60)+':'+(Math.floor(s%60)<10?'0':'')+Math.floor(s%60);}
+function nextChap(){var all=BIBLE.OT.concat(BIBLE.NT);for(var i=0;i<all.length;i++){if(all[i].n===S.book){if(S.chapter<all[i].c){S.chapter++;selectChap(S.chapter);}break;}}}
+function prevChap(){if(S.chapter>1){S.chapter--;selectChap(S.chapter);}}
+
+// ══ MINI PLAYER ══
+function showMiniPlayer(book,num){
+  var mp=document.getElementById('miniPlayer');if(!mp)return;
+  mp.classList.add('on');
+  document.getElementById('miniBook').textContent=book;
+  document.getElementById('miniTitle').textContent='Chapter '+num;
+}
+function updateMiniPlayer(){
+  var ap=document.getElementById('ap');var fill=document.getElementById('miniBarFill');
+  if(fill&&ap.duration)fill.style.width=((ap.currentTime/ap.duration)*100)+'%';
+}
+
+// ══ ADS ══
+function waLink(phone,name){return'https://wa.me/'+(phone||'').replace(/\D/g,'')+'?text='+encodeURIComponent('Hi, I saw your ad on Amen iTestify — '+name);}
+function adHTML(a){
+  var wa=waLink(a.whatsapp,a.name);
+  if(a.format==='banner'){
+    var img=a.image_url?'<img style="width:100%;height:110px;object-fit:cover;display:block" src="'+a.image_url+'" alt="ad"/>':'<div class="ad-banner-placeholder">🏢</div>';
+    return'<div class="ad-slide"><div class="ad-banner">'+img+'<div class="ad-banner-body"><div class="ad-banner-name">'+a.name+'</div><div class="ad-banner-tag">'+a.tagline+'</div><a class="ad-wa" href="'+wa+'" target="_blank">💬 WhatsApp Us</a></div></div></div>';
+  }
+  if(a.format==='text')return'<div class="ad-slide"><div class="ad-text-card"><div class="ad-text-info"><div class="ad-text-name">'+a.name+'</div><div class="ad-text-msg">'+a.message+'</div></div><a class="ad-wa" href="'+wa+'" target="_blank" style="flex-shrink:0">💬 Chat</a></div></div>';
+  if(a.format==='event'){
+    var ds='';try{ds=new Date(a.event_date).toLocaleDateString('en-NG',{weekday:'short',day:'numeric',month:'long'});}catch(e){}
+    return'<div class="ad-slide"><div class="ad-event-card"><div class="ad-event-top"><span class="ad-event-eyebrow">📅 Event</span><span class="ad-event-badge">'+a.event_type+'</span></div><div class="ad-event-body"><div class="ad-event-name">'+a.name+'</div><div class="ad-event-meta">'+ds+(a.event_time?' · '+a.event_time:'')+'<br>📍 '+a.location+'</div><a class="ad-wa" href="'+wa+'" target="_blank">💬 WhatsApp for details</a></div></div></div>';
+  }
+  return'';
+}
+var adTimers={};
+function renderAds(tab){
+  var now=new Date();var active=allAds.filter(function(a){return !a.expiry||new Date(a.expiry)>=now;});
+  var ids={'bible':'bibleAdWrap','testi':'testiAdWrap','events':'eventAdWrap'};
+  var wrap=document.getElementById(ids[tab]);if(!wrap)return;
+  if(!active.length){wrap.innerHTML='';return;}
+  var pfx=tab[0];
+  var dots=active.length>1?active.map(function(_,i){return'<span class="ad-dot'+(i===0?' on':'')+'" onclick="goToAd('+i+',\''+pfx+'\')"></span>';}).join(''):'';
+  wrap.innerHTML='<div class="ad-carousel"><div class="ad-label">Sponsored</div><div class="ad-track" id="adt-'+pfx+'">'+active.map(adHTML).join('')+'</div>'+(active.length>1?'<div class="ad-dots" id="add-'+pfx+'">'+dots+'</div>':'')+'</div>';
+  if(active.length>1){clearInterval(adTimers[pfx]);var idx=0;adTimers[pfx]=setInterval(function(){idx=(idx+1)%active.length;goToAd(idx,pfx);},5000);}
+}
+function goToAd(i,pfx){var t=document.getElementById('adt-'+pfx),dots=document.querySelectorAll('#add-'+pfx+' .ad-dot');if(t)t.style.transform='translateX(-'+(i*100)+'%)';dots.forEach(function(d,j){d.classList.toggle('on',j===i);});}
+
+// ══ TESTIMONIES ══
+function buildCatCounts(){
+  CAT_COUNTS={};allTestimonies.forEach(function(t){CAT_COUNTS[t.category]=(CAT_COUNTS[t.category]||0)+1;});
+  buildFilterRows();
+}
+function buildFilterRows(){
+  var row=document.getElementById('testiFilterRow');if(!row)return;
+  var cats=[['all','All'],['healing','💊 Healing'],['financial','💰 Financial'],['marriage','💍 Marriage'],['business','💼 Business'],['overcoming','⚡ Overcoming'],['faith','✝ Faith Journey']];
+  row.innerHTML=cats.map(function(c){
+    var count=c[0]==='all'?allTestimonies.length:(CAT_COUNTS[c[0]]||0);
+    var label=c[1]+(count?' ('+count+')':'');
+    return'<button class="fchip'+(S.testiFilter===c[0]?' on':'')+'" onclick="filterTesti(\''+c[0]+'\',this)">'+label+'</button>';
+  }).join('');
+  buildEventFilterRow();
+}
+function buildEventFilterRow(){
+  var row=document.getElementById('eventFilterRow');if(!row)return;
+  var types=['All Types','Church Programme','Conference','Crusade','Concert','Prayer Meeting','Community'];
+  row.innerHTML=types.map(function(t){
+    var val=t.toLowerCase().replace(/ /g,'_');
+    return'<button class="fchip'+(S.eventFilter===val?' on':'')+'" onclick="filterEvent(\''+val+'\',this)">'+t+'</button>';
+  }).join('');
+}
+function filterTesti(f,el){S.testiFilter=f;S.testiPage=1;document.querySelectorAll('#testiFilterRow .fchip').forEach(function(c){c.classList.remove('on');});el.classList.add('on');renderTestimonies();}
+function renderFeatured(){
+  var el=document.getElementById('featuredTesti');if(!el)return;
+  var feat=allTestimonies.find(function(t){return t.featured;});
+  if(!feat){el.innerHTML='';return;}
+  var ini=(feat.name||'A').split(' ').map(function(w){return w[0]||'';}).join('').slice(0,2).toUpperCase();
+  var audS=feat.audio_url?'<div class="tcard-audio"><audio controls preload="none" src="'+feat.audio_url+'" style="width:100%;border-radius:8px"></audio><div class="tcard-audio-label">🎙 Voice Testimony</div></div>':'';
+  el.innerHTML='<div class="featured-card">'
+    +'<div class="featured-label">⭐ Featured Testimony of the Week</div>'
+    +'<div class="tcard-top"><div class="avatar">'+ini+'</div><div><div class="tcard-name">'+(feat.name||'Anonymous')+(feat.state?' · '+feat.state:'')+'</div><div class="tcard-meta">'+(feat.church?'<span>⛪ '+feat.church+'</span>':'')+'</div></div></div>'
+    +(feat.body?'<div class="tcard-body">'+feat.body+'</div>':'')
+    +audS
+    +'<div class="tcard-foot"><span class="tag tag-amber">'+(CAT[feat.category]||feat.category)+'</span><button class="share-btn" onclick="shareItem(\'testimony\',\''+feat.id+'\',\''+escQ(feat.name||'Anonymous')+'\'">🔗 Share</button></div>'
+    +'</div>';
+}
+function renderTestimonies(){
+  var f=S.testiFilter;
+  var list=allTestimonies.filter(function(t){return(f==='all'||t.category===f)&&!t.featured;});
+  var total=list.length,pages=Math.ceil(total/TESTI_PER_PAGE)||1;
+  if(S.testiPage>pages)S.testiPage=1;
+  var page=list.slice((S.testiPage-1)*TESTI_PER_PAGE,S.testiPage*TESTI_PER_PAGE);
+  var el=document.getElementById('testiList'),pg=document.getElementById('testiPagination');if(!el)return;
+  if(!page.length){el.innerHTML='<div class="empty-msg">No stories here yet. Yours could be the first one someone needs to hear.</div>';if(pg)pg.innerHTML='';return;}
+  var now=new Date();
+  el.innerHTML=page.map(function(t){
+    var ini=(t.name||'A').split(' ').map(function(w){return w[0]||'';}).join('').slice(0,2).toUpperCase();
+    var ds='';try{ds=new Date(t.created_at).toLocaleDateString('en-NG',{day:'numeric',month:'short'});}catch(e){}
+    var isNew=(now-new Date(t.created_at))<172800000;
+    var ytS='';if(t.yt_url){var ym=t.yt_url.match(/[?&]v=([^&]{11})/)||t.yt_url.match(/youtu\.be\/([^?]{11})/);if(ym)ytS='<div class="tcard-yt"><iframe src="https://www.youtube.com/embed/'+ym[1]+'" allowfullscreen loading="lazy"></iframe></div>';}
+    var audS=t.audio_url?'<div class="tcard-audio"><audio controls preload="none" src="'+t.audio_url+'" style="width:100%;border-radius:8px"></audio><div class="tcard-audio-label">🎙 Voice Testimony</div></div>':'';
+    return'<div class="tcard">'
+      +'<div class="tcard-top"><div class="avatar">'+ini+'</div><div><div class="tcard-name">'+(t.name||'Anonymous')+(t.state?' · '+t.state:'')+(isNew?' <span class="tag tag-new">NEW</span>':'')+'</div><div class="tcard-meta">'+(t.church?'<span>⛪ '+t.church+'</span>':'')+'<span>📅 '+ds+'</span></div></div></div>'
+      +ytS+(t.body?'<div class="tcard-body">'+t.body+'</div>':'')+audS
+      +'<div class="tcard-foot"><span class="tag tag-amber">'+(CAT[t.category]||t.category)+'</span><button class="share-btn" onclick="shareItem(\'testimony\',\''+t.id+'\',\''+escQ(t.name||'Anonymous')+'\')">🔗 Share</button></div>'
+      +'</div>';
+  }).join('');
+  if(pg){if(pages<=1){pg.innerHTML='';}else{pg.innerHTML='<div class="pagination"><button class="page-btn'+(S.testiPage<=1?' disabled':'')+'" onclick="changePage(\'testi\',-1)">← Prev</button><span class="page-info">Page '+S.testiPage+' of '+pages+'</span><button class="page-btn'+(S.testiPage>=pages?' disabled':'')+'" onclick="changePage(\'testi\',1)">Next →</button></div>';}}
+}
+function changePage(type,dir){
+  if(type==='testi'){S.testiPage+=dir;renderTestimonies();document.getElementById('testiList').scrollIntoView({behavior:'smooth',block:'start'});}
+  else{S.eventPage+=dir;renderEvents();document.getElementById('eventList').scrollIntoView({behavior:'smooth',block:'start'});}
+}
+function updateWaBtn(){
+  var num=(settings.whatsapp_number||'').replace(/\D/g,'');
+  var el=document.getElementById('waVoiceBtn');if(!el)return;
+  el.href=num?'https://wa.me/'+num+'?text='+encodeURIComponent('Hi Amen iTestify, I want to share my testimony as a voice note:'):'#';
+}
+function submitTestimony(){
+  var name=document.getElementById('t-name').value.trim(),cat=document.getElementById('t-cat').value;
+  if(!name){toast('Please enter your name');return;}if(!cat){toast('Please select a category');return;}
+  sbPost('testimonies',{name:name,state:document.getElementById('t-state').value.trim(),church:document.getElementById('t-church').value.trim(),category:cat,body:document.getElementById('t-body').value.trim(),audio_url:'',yt_url:'',status:'pending'})
+    .then(function(){['t-name','t-state','t-cat','t-church','t-body'].forEach(function(id){document.getElementById(id).value='';});toast('We got your story. We will review and publish within 24 hours. Thank you for sharing.');try{gaEvent('testimony_submit','engagement',cat);}catch(e){}})
+    .catch(function(){toast('Error submitting. Please try again.');});
+}
+
+// ══ SHARE ══
+function escQ(s){return(s||'').replace(/'/g,"\\'");}
+function shareItem(type,id,name){
+  var text='';var url=window.location.href.split('?')[0];
+  if(type==='testimony')text='I just read a powerful testimony on Amen iTestify — '+name+'. Check it out: '+url;
+  if(type==='event')text='Check out this event on Amen iTestify — '+name+': '+url;
+  if(navigator.share){navigator.share({title:'Amen iTestify',text:text,url:url}).catch(function(){});}
+  else{var wa='https://wa.me/?text='+encodeURIComponent(text);window.open(wa,'_blank');}
+  try{gaEvent('share',type,name);}catch(e){}
+}
+
+// ══ EVENTS ══
+function filterEvent(f,el){S.eventFilter=f;S.eventPage=1;document.querySelectorAll('#eventFilterRow .fchip').forEach(function(c){c.classList.remove('on');});el.classList.add('on');renderEvents();}
+function renderEvents(){
+  var f=S.eventFilter;
+  var list=allEvents.filter(function(e){
+    if(f==='all_types'||f==='all')return true;
+    return(e.type||'').toLowerCase().replace(/ /g,'_')===f;
+  });
+  var total=list.length,pages=Math.ceil(total/EVENT_PER_PAGE)||1;
+  if(S.eventPage>pages)S.eventPage=1;
+  var page=list.slice((S.eventPage-1)*EVENT_PER_PAGE,S.eventPage*EVENT_PER_PAGE);
+  var el=document.getElementById('eventList'),pg=document.getElementById('eventPagination');if(!el)return;
+  if(!page.length){el.innerHTML='<div class="empty-msg">No events listed yet.<br>Be the first to submit your event below. 📅</div>';if(pg)pg.innerHTML='';return;}
+  el.innerHTML=page.map(function(ev){
+    var ds='';try{ds=new Date(ev.event_date).toLocaleDateString('en-NG',{weekday:'long',day:'numeric',month:'long',year:'numeric'});}catch(e){}
+    var wa='https://wa.me/'+(ev.whatsapp||'').replace(/\D/g,'')+'?text='+encodeURIComponent('Hi, I saw your event on Amen iTestify — '+ev.name+'. I would like more information.');
+    return'<div class="ecard'+(ev.featured?' featured-event':'')+'">'
+      +'<div class="ecard-top"><div class="ecard-date">'+(ds||'Date TBA')+'</div><div class="ecard-type-badge">'+ev.type+'</div></div>'
+      +'<div class="ecard-body">'
+      +(ev.featured?'<div style="font-size:.62rem;font-weight:700;color:var(--green);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px">⭐ Featured Event</div>':'')
+      +'<div class="ecard-name">'+ev.name+'</div>'
+      +'<div class="ecard-meta">'+(ev.event_time?'⏰ '+ev.event_time+'<br>':'')+'📍 '+ev.location+(ev.state?', '+ev.state:'')+(ev.church?'<br>⛪ '+ev.church:'')+(ev.organiser_name?'<br>👤 '+ev.organiser_name:'')+(ev.description?'<br><br>'+ev.description:'')+'</div>'
+      +'<div class="ecard-foot">'
+      +(ev.whatsapp?'<a class="event-wa-btn" href="'+wa+'" target="_blank">💬 WhatsApp</a>':'<span></span>')
+      +'<button class="share-btn" onclick="shareItem(\'event\',\''+ev.id+'\',\''+escQ(ev.name)+'\')">🔗 Share</button>'
+      +'</div>'
+      +'</div></div>';
+  }).join('');
+  if(pg){if(pages<=1){pg.innerHTML='';}else{pg.innerHTML='<div class="pagination"><button class="page-btn'+(S.eventPage<=1?' disabled':'')+'" onclick="changePage(\'event\',-1)">← Prev</button><span class="page-info">Page '+S.eventPage+' of '+pages+'</span><button class="page-btn'+(S.eventPage>=pages?' disabled':'')+'" onclick="changePage(\'event\',1)">Next →</button></div>';}}
+}
+function submitEvent(){
+  var name=document.getElementById('ev-name').value.trim();
+  var loc=document.getElementById('ev-location').value.trim();
+  var state=document.getElementById('ev-state').value;
+  var wa=document.getElementById('ev-wa').value.trim();
+  var msg=document.getElementById('ev-msg');
+  if(!name){toast('Please enter event name');return;}
+  if(!loc){toast('Please enter location');return;}
+  if(!state){toast('Please select a state');return;}
+  if(!wa){toast('Please enter WhatsApp number');return;}
+  sbPost('events',{name:name,type:document.getElementById('ev-type').value,event_date:document.getElementById('ev-date').value||null,event_time:document.getElementById('ev-time').value.trim(),location:loc,state:state,church:document.getElementById('ev-church').value.trim(),organiser_name:document.getElementById('ev-organiser').value.trim(),description:document.getElementById('ev-desc').value.trim(),whatsapp:wa,status:'pending'})
+    .then(function(){
+      ['ev-name','ev-date','ev-time','ev-location','ev-church','ev-organiser','ev-desc','ev-wa'].forEach(function(id){document.getElementById(id).value='';});
+      if(msg){msg.textContent='✅ Received. We will review and publish within 24 hours.';msg.style.display='block';setTimeout(function(){msg.style.display='none';},5000);}
+      try{gaEvent('event_submit','engagement',name);}catch(e){}
+    }).catch(function(){toast('Error submitting event. Please try again.');});
+}
+
+// ══ ADVERTISE — DIRECT WHATSAPP ══
+function openAdvertiseWA(){
+  var num=(settings.whatsapp_number||'').replace(/\D/g,'');
+  if(!num){toast('Admin WhatsApp not set yet — check back soon');return;}
+  var msg=encodeURIComponent('Hi Amen iTestify, I would like to reach your audience. Please tell me about your ad packages.');
+  window.open('https://wa.me/'+num+'?text='+msg,'_blank');
+  try{gaEvent('advertise_click','engagement','fab_button');}catch(e){}
+}
+
+// ══ ADMIN ══
+function toggleEye(){var i=document.getElementById('adminPw'),b=document.getElementById('eyeBtn');i.type=i.type==='password'?'text':'password';b.textContent=i.type==='password'?'👁':'🙈';}
+function checkAdmin(){if(document.getElementById('adminPw').value===ADMIN_PW){S.adminIn=true;showAdminDash();toast('Welcome, Admin');}else{toast('Incorrect password');}}
+function showAdminDash(){document.getElementById('adminLock').setAttribute('style','display:none');document.getElementById('adminDash').setAttribute('style','display:block');setTimeout(refreshAdmin,100);}
+function logoutAdmin(){S.adminIn=false;document.getElementById('adminLock').setAttribute('style','display:block');document.getElementById('adminDash').setAttribute('style','display:none');document.getElementById('adminPw').value='';closeAdmin();}
+function refreshAdmin(){
+  var p1=sbGet('testimonies','status=eq.live').then(function(d){return d||[];}).catch(function(){return[];});
+  var p2=sbGet('testimonies','status=eq.pending').then(function(d){return d||[];}).catch(function(){return[];});
+  var p3=sbGet('ads','select=amount').then(function(d){return d||[];}).catch(function(){return[];});
+  var p4=sbGet('events','status=eq.live').then(function(d){return d||[];}).catch(function(){return[];});
+  var p5=sbGet('events','status=eq.pending').then(function(d){return d||[];}).catch(function(){return[];});
+  var p6=sbGet('ad_requests','status=eq.pending').then(function(d){return d||[];}).catch(function(){return[];});
+  Promise.all([p1,p2,p3,p4,p5,p6]).then(function(r){
+    var live=r[0].length,pend=r[1].length,evLive=r[3].length;
+    var earned=r[2].reduce(function(s,a){return s+(parseInt(a.amount)||0);},0);
+    var activeAds=allAds.filter(function(a){return !a.expiry||new Date(a.expiry)>=new Date();}).length;
+    var el=function(id,v){var e=document.getElementById(id);if(e)e.textContent=v;};
+    el('s-audio',Object.keys(audioMap).filter(function(k){return!k.endsWith('_female')&&!k.endsWith('_male');}).length);
+    el('s-live',live);el('s-events',evLive);el('s-pend',pend+(r[4].length));
+    el('s-ads',activeAds);el('s-earn','\u20a6'+earned.toLocaleString());
+    document.getElementById('cfg-wa').value=settings.whatsapp_number||'';
+    document.getElementById('cfg-yt').value=settings.youtube_url||'';
+    populateBookSel();renderPending(r[1]);renderPendingEvents(r[4]);
+    renderLiveAds();renderAdRequests(r[5]);renderLiveTestimonies(r[0]);
+    updateTestimonySelects();
+  });
+}
+function saveSettings(){
+  var wa=document.getElementById('cfg-wa').value.trim(),yt=document.getElementById('cfg-yt').value.trim();
+  sbPatch('settings','id=eq.main',{whatsapp_number:wa,youtube_url:yt,updated_at:new Date().toISOString()})
+    .then(function(){settings.whatsapp_number=wa;settings.youtube_url=yt;updateWaBtn();toast('Settings saved ✅');})
+    .catch(function(){toast('Error saving settings');});
+}
+function populateBookSel(){
+  var sel=document.getElementById('up-book');if(!sel)return;
+  var all=BIBLE.OT.concat(BIBLE.NT);
+  sel.innerHTML=all.map(function(b){return'<option>'+b.n+'</option>';}).join('');updateChapSel();
+}
+function updateChapSel(){
+  var sel=document.getElementById('up-book'),cs=document.getElementById('up-chap');if(!sel||!cs)return;
+  var all=BIBLE.OT.concat(BIBLE.NT),book=null;
+  for(var i=0;i<all.length;i++){if(all[i].n===sel.value){book=all[i];break;}}
+  if(!book)return;
+  cs.innerHTML='';for(var c=1;c<=book.c;c++)cs.innerHTML+='<option value="'+c+'">Chapter '+c+'</option>';
+}
+function saveAudio(){
+  var book=document.getElementById('up-book').value,chap=parseInt(document.getElementById('up-chap').value);
+  var url=document.getElementById('up-url').value.trim(),artist=document.getElementById('up-artist').value.trim();
+  var voice=document.getElementById('up-voice').value,msg=document.getElementById('up-msg');
+  if(!url){toast('Please paste the Bunny.net URL');return;}
+  sbPost('audio_chapters',{book:book,chapter:chap,audio_url:url,artist_name:artist||'Nigerian Voice',voice_type:voice})
+    .then(function(){
+      audioMap[book+'_'+chap+'_'+voice]={url:url,artist:artist||'Nigerian Voice',voice:voice};
+      if(!audioMap[book+'_'+chap+'_default'])audioMap[book+'_'+chap+'_default']={url:url,artist:artist||'Nigerian Voice',voice:voice};
+      document.getElementById('up-url').value='';document.getElementById('up-artist').value='';
+      renderBooks();updateStats();refreshAdmin();
+      if(msg){msg.textContent='✅ '+book+' Chapter '+chap+' is live!';msg.style.display='block';setTimeout(function(){msg.style.display='none';},3500);}
+    }).catch(function(e){
+      if(e.message&&e.message.includes('unique')){
+        sbPatch('audio_chapters','book=eq.'+encodeURIComponent(book)+'&chapter=eq.'+chap+'&voice_type=eq.'+voice,{audio_url:url,artist_name:artist||'Nigerian Voice'})
+          .then(function(){audioMap[book+'_'+chap+'_'+voice]={url:url,artist:artist||'Nigerian Voice',voice:voice};document.getElementById('up-url').value='';renderBooks();refreshAdmin();if(msg){msg.textContent='✅ Updated '+book+' Chapter '+chap;msg.style.display='block';setTimeout(function(){msg.style.display='none';},3500);}})
+          .catch(function(){toast('Error updating audio');});
+      }else{toast('Error saving audio');}
+    });
+}
+function updateTestimonySelects(){
+  var ta=document.getElementById('ta-sel'),fs=document.getElementById('feat-sel');
+  var opts=allTestimonies.map(function(t){return'<option value="'+t.id+'">'+( t.name||'Anonymous')+(t.state?' · '+t.state:'')+(t.category?' ['+t.category+']':'')+'</option>';}).join('');
+  if(ta)ta.innerHTML='<option value="">Select testimony</option>'+opts;
+  if(fs)fs.innerHTML='<option value="">Select testimony</option>'+opts;
+}
+function saveTestimonyAudio(){
+  var id=document.getElementById('ta-sel').value,url=document.getElementById('ta-url').value.trim(),msg=document.getElementById('ta-msg');
+  if(!id){toast('Please select a testimony');return;}if(!url){toast('Please paste the Bunny.net URL');return;}
+  sbPatch('testimonies','id=eq.'+id,{audio_url:url})
+    .then(function(){
+      for(var i=0;i<allTestimonies.length;i++){if(allTestimonies[i].id===id){allTestimonies[i].audio_url=url;break;}}
+      renderTestimonies();renderFeatured();
+      document.getElementById('ta-url').value='';
+      if(msg){msg.textContent='✅ Voice audio added to testimony!';msg.style.display='block';setTimeout(function(){msg.style.display='none';},3500);}
+    }).catch(function(){toast('Error saving audio');});
+}
+function setFeatured(){
+  var id=document.getElementById('feat-sel').value,msg=document.getElementById('feat-msg');
+  if(!id){toast('Please select a testimony');return;}
+  sbPatch('testimonies','featured=eq.true',{featured:false}).then(function(){
+    return sbPatch('testimonies','id=eq.'+id,{featured:true});
+  }).then(function(){
+    allTestimonies.forEach(function(t){t.featured=t.id===id;});
+    renderFeatured();renderTestimonies();
+    if(msg){msg.textContent='✅ Featured testimony updated!';msg.style.display='block';setTimeout(function(){msg.style.display='none';},3000);}
+  }).catch(function(){toast('Error setting featured');});
+}
+function clearFeatured(){
+  sbPatch('testimonies','featured=eq.true',{featured:false}).then(function(){
+    allTestimonies.forEach(function(t){t.featured=false;});
+    renderFeatured();var msg=document.getElementById('feat-msg');
+    if(msg){msg.textContent='✅ Featured cleared';msg.style.display='block';setTimeout(function(){msg.style.display='none';},2000);}
+  }).catch(function(){toast('Error clearing featured');});
+}
+function addYouTubeTestimony(){
+  var cat=document.getElementById('yt-cat').value,url=document.getElementById('yt-url').value.trim(),msg=document.getElementById('yt-msg');
+  if(!cat){toast('Please select a category');return;}if(!url){toast('Please paste a YouTube URL');return;}
+  sbPost('testimonies',{name:document.getElementById('yt-name').value.trim()||'YouTube Testimony',state:document.getElementById('yt-state').value.trim(),category:cat,body:document.getElementById('yt-body').value.trim(),audio_url:'',yt_url:url,status:'live'})
+    .then(function(d){if(d&&d[0])allTestimonies.unshift(d[0]);renderTestimonies();buildCatCounts();['yt-name','yt-state','yt-cat','yt-body','yt-url'].forEach(function(id){document.getElementById(id).value='';});refreshAdmin();if(msg){msg.textContent='✅ YouTube testimony is now live!';msg.style.display='block';setTimeout(function(){msg.style.display='none';},3500);}})
+    .catch(function(){toast('Error adding YouTube testimony');});
+}
+function renderPending(pend){
+  var el=document.getElementById('pendingList');if(!el)return;
+  if(!pend||!pend.length){el.innerHTML='<div style="font-size:.82rem;color:var(--g400);padding:10px 0">Nothing pending ✅</div>';return;}
+  el.innerHTML=pend.map(function(t){
+    return'<div class="pcard"><div class="pcard-title">'+(t.name||'Anonymous')+(t.state?' · '+t.state:'')+'</div>'
+      +'<div class="pcard-meta">'+(CAT[t.category]||t.category)+(t.church?' · '+t.church:'')+'</div>'
+      +'<div class="pcard-body">'+(t.body||'(Voice note — no written text)').slice(0,220)+'</div>'
+      +'<div class="fgroup" style="margin-bottom:8px"><label class="flabel">Voice Audio URL (Bunny.net)</label><input class="finput" id="pa-'+t.id+'" placeholder="https://amenitestify.b-cdn.net/..." style="font-size:.78rem;padding:8px 10px"/></div>'
+      +'<div class="pcard-acts"><button class="btn btn-black btn-xs" onclick="approveT(\''+t.id+'\')">✅ Approve</button><button class="btn btn-danger btn-xs" onclick="rejectT(\''+t.id+'\')">❌ Reject</button></div></div>';
+  }).join('');
+}
+function approveT(id){
+  var audioEl=document.getElementById('pa-'+id),audioUrl=audioEl?audioEl.value.trim():'';
+  var updates={status:'live'};if(audioUrl)updates.audio_url=audioUrl;
+  sbPatch('testimonies','id=eq.'+id,updates)
+    .then(function(){sbGet('testimonies','status=eq.live&order=created_at.desc').then(function(d){allTestimonies=d||[];renderTestimonies();buildCatCounts();updateTestimonySelects();});refreshAdmin();toast('✅ Testimony is live!');})
+    .catch(function(){toast('Error approving');});
+}
+function rejectT(id){sbDelete('testimonies','id=eq.'+id).then(function(){refreshAdmin();toast('Removed');}).catch(function(){toast('Error removing');});}
+function renderLiveTestimonies(live){
+  var el=document.getElementById('liveTestiList');if(!el)return;
+  if(!live||!live.length){el.innerHTML='<div style="font-size:.82rem;color:var(--g400);padding:10px 0">No live testimonies yet</div>';return;}
+  el.innerHTML=live.map(function(t){
+    return'<div class="live-row"><div class="live-row-info"><div class="live-row-name">'+(t.name||'Anonymous')+(t.state?' · '+t.state:'')+'</div><div class="live-row-sub">'+(CAT[t.category]||t.category)+(t.audio_url?' · 🎙':'')+'</div></div><button class="btn btn-danger btn-xs" data-id="'+t.id+'" onclick="deleteLiveTesti(this)">Remove</button></div>';
+  }).join('');
+}
+function deleteLiveTesti(btn){
+  var id=btn.dataset.id;
+  sbDelete('testimonies','id=eq.'+id).then(function(){allTestimonies=allTestimonies.filter(function(t){return t.id!==id;});renderTestimonies();buildCatCounts();updateTestimonySelects();refreshAdmin();toast('Testimony removed');}).catch(function(){toast('Error removing');});
+}
+function renderPendingEvents(pend){
+  var el=document.getElementById('pendingEvents');if(!el)return;
+  if(!pend||!pend.length){el.innerHTML='<div style="font-size:.82rem;color:var(--g400);padding:10px 0">Nothing pending ✅</div>';return;}
+  el.innerHTML=pend.map(function(ev){
+    var ds='';try{ds=new Date(ev.event_date).toLocaleDateString('en-NG',{day:'numeric',month:'short',year:'numeric'});}catch(e){}
+    return'<div class="pcard"><div class="pcard-title">'+ev.name+'</div>'
+      +'<div class="pcard-meta">'+ev.type+' · '+(ds||'Date TBA')+' · '+ev.location+(ev.state?', '+ev.state:'')+'</div>'
+      +'<div class="pcard-body">'+(ev.description||'').slice(0,150)+(ev.organiser_name?' — '+ev.organiser_name:'')+'</div>'
+      +'<div style="font-size:.75rem;color:var(--g600);margin-bottom:8px">📞 '+ev.whatsapp+'</div>'
+      +'<div class="pcard-acts">'
+      +'<button class="btn btn-black btn-xs" onclick="approveEvent(\''+ev.id+'\')">✅ Approve</button>'
+      +'<button class="btn btn-green btn-xs" onclick="featureEvent(\''+ev.id+'\')">⭐ Approve + Feature</button>'
+      +'<button class="btn btn-danger btn-xs" onclick="rejectEvent(\''+ev.id+'\')">❌ Reject</button>'
+      +'</div></div>';
+  }).join('');
+}
+function approveEvent(id){sbPatch('events','id=eq.'+id,{status:'live'}).then(function(){sbGet('events','status=eq.live&order=event_date.asc').then(function(d){allEvents=(d||[]).filter(function(e){return !e.event_date||new Date(e.event_date)>=new Date(new Date().toDateString());});renderEvents();});refreshAdmin();toast('✅ Event is live!');}).catch(function(){toast('Error approving event');});}
+function featureEvent(id){sbPatch('events','id=eq.'+id,{status:'live',featured:true}).then(function(){sbGet('events','status=eq.live&order=event_date.asc').then(function(d){allEvents=(d||[]).filter(function(e){return !e.event_date||new Date(e.event_date)>=new Date(new Date().toDateString());});renderEvents();});refreshAdmin();toast('⭐ Event is live and featured!');}).catch(function(){toast('Error featuring event');});}
+function rejectEvent(id){sbDelete('events','id=eq.'+id).then(function(){refreshAdmin();toast('Event removed');}).catch(function(){toast('Error removing');});}
+function showAdFields(){
+  var f=document.getElementById('ad-fmt').value;
+  document.getElementById('adf-banner').style.display=f==='banner'?'block':'none';
+  document.getElementById('adf-text').style.display=f==='text'?'block':'none';
+  document.getElementById('adf-event').style.display=f==='event'?'block':'none';
+  document.getElementById('ad-submit-wrap').style.display=f?'block':'none';
+}
+function createAd(){
+  var f=document.getElementById('ad-fmt').value,ad={format:f},msg=document.getElementById('ad-msg');
+  if(f==='banner'){var n=document.getElementById('ab-name').value.trim(),tg=document.getElementById('ab-tag').value.trim(),wa=document.getElementById('ab-wa').value.trim();if(!n||!tg||!wa){toast('Fill Name, Tagline and WhatsApp');return;}ad.name=n;ad.tagline=tg;ad.image_url=document.getElementById('ab-img').value.trim();ad.whatsapp=wa;ad.amount=parseInt(document.getElementById('ab-amt').value)||0;var exp=document.getElementById('ab-exp').value;if(exp)ad.expiry=exp;['ab-name','ab-tag','ab-img','ab-wa','ab-amt','ab-exp'].forEach(function(id){document.getElementById(id).value='';});}
+  else if(f==='text'){var n=document.getElementById('at-name').value.trim(),m=document.getElementById('at-msg').value.trim(),wa=document.getElementById('at-wa').value.trim();if(!n||!m||!wa){toast('Fill Name, Message and WhatsApp');return;}ad.name=n;ad.message=m;ad.whatsapp=wa;ad.amount=parseInt(document.getElementById('at-amt').value)||0;var exp=document.getElementById('at-exp').value;if(exp)ad.expiry=exp;['at-name','at-msg','at-wa','at-amt','at-exp'].forEach(function(id){document.getElementById(id).value='';});}
+  else if(f==='event'){var n=document.getElementById('ae-name').value.trim(),l=document.getElementById('ae-loc').value.trim(),wa=document.getElementById('ae-wa').value.trim();if(!n||!l||!wa){toast('Fill Event Name, Location and WhatsApp');return;}ad.name=n;ad.location=l;ad.whatsapp=wa;ad.event_type=document.getElementById('ae-type').value;ad.event_date=document.getElementById('ae-date').value||null;ad.event_time=document.getElementById('ae-time').value;ad.amount=parseInt(document.getElementById('ae-amt').value)||0;var exp=document.getElementById('ae-exp').value;if(exp)ad.expiry=exp;['ae-name','ae-loc','ae-wa','ae-date','ae-time','ae-amt','ae-exp'].forEach(function(id){document.getElementById(id).value='';});}
+  sbPost('ads',ad).then(function(d){if(d&&d[0])allAds.unshift(d[0]);renderAds('bible');renderAds('testi');renderAds('events');renderLiveAds();refreshAdmin();document.getElementById('ad-fmt').value='';showAdFields();if(msg){msg.textContent='✅ Ad is now live!';msg.style.display='block';setTimeout(function(){msg.style.display='none';},3500);}}).catch(function(){toast('Error creating ad');});
+}
+function renderLiveAds(){
+  var el=document.getElementById('liveAdsList');if(!el)return;
+  var now=new Date(),active=allAds.filter(function(a){return !a.expiry||new Date(a.expiry)>=now;});
+  if(!active.length){el.innerHTML='<div style="font-size:.82rem;color:var(--g400);padding:10px 0">No live ads</div>';return;}
+  el.innerHTML=active.map(function(a){var exp=a.expiry?new Date(a.expiry).toLocaleDateString('en-NG',{day:'numeric',month:'short'}):'No expiry';return'<div class="live-row"><div class="live-row-info"><div class="live-row-name">'+a.name+'</div><div class="live-row-sub">'+a.format+' · '+exp+(a.amount?' · ₦'+parseInt(a.amount).toLocaleString():'')+'</div></div><button class="btn btn-danger btn-xs" data-id="'+a.id+'" onclick="removeAd(this)">Remove</button></div>';}).join('');
+}
+function removeAd(btn){var id=btn.dataset.id;sbDelete('ads','id=eq.'+id).then(function(){allAds=allAds.filter(function(a){return a.id!==id;});renderAds('bible');renderAds('testi');renderAds('events');renderLiveAds();refreshAdmin();toast('Ad removed');}).catch(function(){toast('Error removing ad');});}
+function renderAdRequests(reqs){
+  var el=document.getElementById('adRequestsList');if(!el)return;
+  if(!reqs||!reqs.length){el.innerHTML='<div style="font-size:.82rem;color:var(--g400);padding:10px 0">No ad requests</div>';return;}
+  el.innerHTML=reqs.map(function(r){
+    var wa='https://wa.me/'+(r.whatsapp||'').replace(/\D/g,'')+'?text='+encodeURIComponent('Hi '+r.contact_name+', thank you for your interest in advertising on Amen iTestify. Let us discuss your ad package.');
+    return'<div class="pcard"><div class="pcard-title">'+r.business_name+(r.contact_name?' — '+r.contact_name:'')+'</div>'
+      +'<div class="pcard-meta">'+(r.format||'Format TBD')+' · '+(r.budget||'Budget TBD')+'</div>'
+      +'<div class="pcard-body">'+(r.message||'').slice(0,150)+'</div>'
+      +'<div class="pcard-acts">'
+      +'<a class="btn btn-green btn-xs" href="'+wa+'" target="_blank">💬 WhatsApp Them</a>'
+      +'<button class="btn btn-outline btn-xs" data-id="'+r.id+'" onclick="dismissAdReq(this)">Dismiss</button>'
+      +'</div></div>';
+  }).join('');
+}
+function dismissAdReq(btn){var id=btn.dataset.id;sbPatch('ad_requests','id=eq.'+id,{status:'contacted'}).then(function(){refreshAdmin();toast('Marked as contacted');}).catch(function(){toast('Error');});}
+
+// ══ PUBLISH VOICE TESTIMONY DIRECTLY ══
+function publishVoiceTestimony(){
+  var cat=document.getElementById('vt-cat').value;
+  var url=document.getElementById('vt-url').value.trim();
+  var msg=document.getElementById('vt-msg');
+  if(!cat){toast('Please select a category');return;}
+  if(!url){toast('Please paste the Bunny.net URL');return;}
+  sbPost('testimonies',{
+    name:document.getElementById('vt-name').value.trim()||'Anonymous',
+    state:document.getElementById('vt-state').value.trim(),
+    church:document.getElementById('vt-church').value.trim(),
+    category:cat,
+    body:document.getElementById('vt-body').value.trim(),
+    audio_url:url,
+    yt_url:'',
+    status:'live'
+  }).then(function(d){
+    if(d&&d[0])allTestimonies.unshift(d[0]);
+    renderTestimonies();buildCatCounts();updateTestimonySelects();
+    ['vt-name','vt-state','vt-cat','vt-church','vt-body','vt-url'].forEach(function(id){document.getElementById(id).value='';});
+    refreshAdmin();
+    if(msg){msg.textContent='✅ Voice testimony is now live!';msg.style.display='block';setTimeout(function(){msg.style.display='none';},3500);}
+  }).catch(function(){toast('Error publishing testimony');});
+}
+
+// ══ ADD EVENT DIRECTLY FROM ADMIN ══
+function adminAddEvent(featured){
+  var name=document.getElementById('aev-name').value.trim();
+  var loc=document.getElementById('aev-location').value.trim();
+  var state=document.getElementById('aev-state').value;
+  var msg=document.getElementById('aev-msg');
+  if(!name){toast('Please enter event name');return;}
+  if(!loc){toast('Please enter location');return;}
+  if(!state){toast('Please select a state');return;}
+  sbPost('events',{
+    name:name,
+    type:document.getElementById('aev-type').value,
+    event_date:document.getElementById('aev-date').value||null,
+    event_time:document.getElementById('aev-time').value.trim(),
+    location:loc,
+    state:state,
+    church:document.getElementById('aev-church').value.trim(),
+    organiser_name:document.getElementById('aev-organiser').value.trim(),
+    description:document.getElementById('aev-desc').value.trim(),
+    whatsapp:document.getElementById('aev-wa').value.trim(),
+    featured:featured||false,
+    status:'live'
+  }).then(function(d){
+    if(d&&d[0]){allEvents.push(d[0]);allEvents.sort(function(a,b){return new Date(a.event_date)-new Date(b.event_date);});}
+    renderEvents();
+    ['aev-name','aev-date','aev-time','aev-location','aev-church','aev-organiser','aev-desc','aev-wa'].forEach(function(id){document.getElementById(id).value='';});
+    refreshAdmin();
+    if(msg){msg.textContent='✅ Event is now live'+(featured?' and featured!':'!');msg.style.display='block';setTimeout(function(){msg.style.display='none';},3500);}
+  }).catch(function(){toast('Error adding event');});
+}
+</script>
+</body>
+</html>
